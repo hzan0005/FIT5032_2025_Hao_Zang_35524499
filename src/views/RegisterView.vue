@@ -1,6 +1,6 @@
 <template>
-  <div class="container mt-5 fixed-width">
-    <div class="register-card">
+  <div class="container py-4">
+    <div class="register-card mt-5 fixed-width">
       <h2 class="text-center mb-4 fw-bold">{{ $t('registerTitle') }}</h2>
       <form @submit.prevent="register">
         <div class="mb-3">

@@ -1,0 +1,130 @@
+{
+  "Health": [
+    {
+      "username": "alice",
+      "rating": 5,
+      "comment": "The health articles are super practical and easy to understand.",
+      "timestamp": "2025-07-24T10:15:00.000Z"
+    },
+    {
+      "username": "bob",
+      "rating": 4,
+      "comment": "Nice content! Maybe add more videos on elderly nutrition.",
+      "timestamp": "2025-07-24T11:45:00.000Z"
+    },
+    {
+      "username": "claire",
+      "rating": 5,
+      "comment": "Exactly what my parents needed. Thank you!",
+      "timestamp": "2025-07-25T08:30:00.000Z"
+    },
+    {
+      "username": "michael",
+      "rating": 4,
+      "comment": "Informative, though some articles feel a bit long.",
+      "timestamp": "2025-07-26T09:50:00.000Z"
+    },
+    {
+      "username": "nina",
+      "rating": 5,
+      "comment": "Fantastic advice for staying active and healthy!",
+      "timestamp": "2025-07-26T11:20:00.000Z"
+    }
+  ],
+  "Skills": [
+    {
+      "username": "david",
+      "rating": 4,
+      "comment": "Loved the cooking and gardening tutorials!",
+      "timestamp": "2025-07-23T14:00:00.000Z"
+    },
+    {
+      "username": "eva",
+      "rating": 3,
+      "comment": "The tech skill lessons could be slower for beginners.",
+      "timestamp": "2025-07-23T15:15:00.000Z"
+    },
+    {
+      "username": "frank",
+      "rating": 5,
+      "comment": "Very empowering content for older adults.",
+      "timestamp": "2025-07-23T16:45:00.000Z"
+    },
+    {
+      "username": "linda",
+      "rating": 4,
+      "comment": "Useful for my grandparents. Especially liked the painting section.",
+      "timestamp": "2025-07-24T10:30:00.000Z"
+    },
+    {
+      "username": "gary",
+      "rating": 5,
+      "comment": "Amazing digital literacy series. Clear and supportive.",
+      "timestamp": "2025-07-25T13:25:00.000Z"
+    }
+  ],
+  "Community": [
+    {
+      "username": "grace",
+      "rating": 5,
+      "comment": "Great events and forums. I finally feel connected.",
+      "timestamp": "2025-07-22T13:30:00.000Z"
+    },
+    {
+      "username": "henry",
+      "rating": 4,
+      "comment": "Helpful posts from other seniors and caregivers.",
+      "timestamp": "2025-07-22T14:10:00.000Z"
+    },
+    {
+      "username": "isabel",
+      "rating": 5,
+      "comment": "I met new friends through the weekly chats.",
+      "timestamp": "2025-07-22T15:45:00.000Z"
+    },
+    {
+      "username": "chloe",
+      "rating": 5,
+      "comment": "The discussion boards are so supportive and well moderated.",
+      "timestamp": "2025-07-24T09:30:00.000Z"
+    },
+    {
+      "username": "robert",
+      "rating": 4,
+      "comment": "Nice sense of community, but navigation is a bit confusing.",
+      "timestamp": "2025-07-25T11:50:00.000Z"
+    }
+  ],
+  "Caregiver": [
+    {
+      "username": "jack",
+      "rating": 4,
+      "comment": "Useful support articles for caregivers.",
+      "timestamp": "2025-07-21T17:00:00.000Z"
+    },
+    {
+      "username": "kelly",
+      "rating": 5,
+      "comment": "Loved the burnout management guide. Very timely.",
+      "timestamp": "2025-07-21T18:20:00.000Z"
+    },
+    {
+      "username": "liam",
+      "rating": 4,
+      "comment": "A great resource, but wish it had more video content.",
+      "timestamp": "2025-07-21T19:40:00.000Z"
+    },
+    {
+      "username": "susan",
+      "rating": 5,
+      "comment": "Finally found advice that feels relevant to caregivers of dementia patients.",
+      "timestamp": "2025-07-23T08:10:00.000Z"
+    },
+    {
+      "username": "tony",
+      "rating": 5,
+      "comment": "The emotional support articles really helped me stay strong.",
+      "timestamp": "2025-07-24T10:05:00.000Z"
+    }
+  ]
+}

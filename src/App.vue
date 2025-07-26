@@ -5,18 +5,23 @@
     <Navbar />
 
     <!-- 页面主内容：始终居中且宽度固定 -->
-    <main class="flex-grow-1 fixed-width">
-      <router-view />
+    <main class="flex-grow-1">
+      <div class="page-container py-4">
+        <router-view />
+      </div>
     </main>
 
     <!-- 全局页脚 -->
     <Footer />
+    <!-- 悬浮评分组件 -->
+    <FloatingRating />
   </div>
 </template>
 
 <script setup>
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'  // 导入页脚组件
+import FloatingRating from './components/FloatingRating.vue'
 </script>
 
 <style>
@@ -36,10 +41,15 @@ body {
   background-color: #fff;
 }
 
-.fixed-width {
+main {
+  flex-grow: 1;
   width: 100%;
-  margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  min-width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
+.page-container {
+  width: 100%;
 }
 </style>

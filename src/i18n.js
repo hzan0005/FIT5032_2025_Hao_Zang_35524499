@@ -1,6 +1,48 @@
 import { createI18n } from 'vue-i18n'
 
 const messages = {
+    community: {
+      description: 'Explore fun, social and supportive community events made just for you.',
+      event1: 'Coffee & Chat Morning',
+      event1_desc: 'Drop in for casual conversations with new friends every Tuesday.',
+      event2: 'Local Arts Group',
+      event2_desc: 'Join seniors creating crafts, paintings, and memories together.',
+      event3: 'Music & Memory Sessions',
+      event3_desc: 'Sing along to golden oldies and reminisce with others.',
+      joinTitle: 'Ways to Join In',
+      join1: 'Speak with your local community center.',
+      join2: 'Join our online sign-up group with one click.',
+      join3: 'Encourage friends or family to come along.',
+      linksTitle: 'Explore Community Platforms'
+    },
+    community: {
+      description: '探索为您量身打造的有趣、社交和互助的社区活动。',
+      event1: '咖啡闲聊早晨',
+      event1_desc: '每周二来和新朋友轻松畅聊。',
+      event2: '本地艺术小组',
+      event2_desc: '与长者们一起手工、绘画、共创美好回忆。',
+      event3: '音乐与回忆时光',
+      event3_desc: '一起唱响金曲，分享往昔故事。',
+      joinTitle: '参与方式',
+      join1: '联系您所在的社区中心。',
+      join2: '一键加入我们的线上报名群。',
+      join3: '邀请亲友一同参与。',
+      linksTitle: '发现社区平台'
+    },
+    community: {
+      description: 'آپ کے لیے بنائے گئے دلچسپ، سماجی اور معاون کمیونٹی ایونٹس دریافت کریں۔',
+      event1: 'کافی اور گپ شپ صبح',
+      event1_desc: 'ہر منگل نئے دوستوں کے ساتھ خوشگوار گفتگو کے لیے آئیں۔',
+      event2: 'مقامی آرٹس گروپ',
+      event2_desc: 'سینئرز کے ساتھ دستکاری، پینٹنگ اور یادیں بنائیں۔',
+      event3: 'موسیقی اور یادیں سیشنز',
+      event3_desc: 'پرانے گانوں پر گائیں اور دوسروں کے ساتھ یادیں تازہ کریں۔',
+      joinTitle: 'شمولیت کے طریقے',
+      join1: 'اپنے مقامی کمیونٹی سینٹر سے بات کریں۔',
+      join2: 'ایک کلک میں ہمارے آن لائن سائن اپ گروپ میں شامل ہوں۔',
+      join3: 'دوستوں یا خاندان کو ساتھ لائیں۔',
+      linksTitle: 'کمیونٹی پلیٹ فارمز دریافت کریں'
+    },
   en: {
     // 通用
     submit: 'Submit',
@@ -35,12 +77,33 @@ const messages = {
     nav: {
       home: 'Home',
       about: 'About Us',
-      health: 'Health & Wellbeing',
+      health: 'Health',
       community: 'Community Programs',
       skills: 'Digital Skills Hub',
       caregiver: 'Caregiver Resources',
       help: 'Help Centre',
-      donate: 'Donate'
+      donate: 'Donate',
+      admin: 'Admin Dashboard'
+    },
+
+    health: {
+      description: 'Stay healthy with these practical tips tailored for seniors.',
+      tip1: 'Stay Active',
+      tip1_desc: 'Engage in regular walking or light exercise to maintain physical strength.',
+      tip2: 'Eat Balanced Meals',
+      tip2_desc: 'Include fruits, vegetables, and whole grains in your diet.',
+      tip3: 'Mental Wellbeing',
+      tip3_desc: 'Stay socially connected and practice mindfulness.',
+      tipsTitle: 'Quick Health Tips',
+      bullet1: 'Drink at least 6–8 cups of water daily.',
+      bullet2: 'Have regular health checkups with your GP.',
+      bullet3: 'Limit alcohol and avoid smoking.',
+      resourcesTitle: 'Useful Resources',
+      resources: {
+        healthdirect: 'HealthDirect – Trusted medical advice',
+        beyondblue: 'Beyond Blue – Mental health support',
+        seniorsonline: 'Seniors Online Victoria'
+      }
     },
 
     // 登录/注册页面
@@ -97,12 +160,33 @@ const messages = {
     nav: {
       home: '首页',
       about: '关于我们',
-      health: '健康与福祉',
+      health: '健康',
       community: '社区项目',
       skills: '数字技能中心',
       caregiver: '照护者资源',
       help: '帮助中心',
-      donate: '捐赠'
+      donate: '捐赠',
+      admin: '管理后台'
+    },
+
+    health: {
+      description: '通过这些实用建议，助力老年人健康生活。',
+      tip1: '保持活力',
+      tip1_desc: '坚持散步或轻度锻炼，增强体力。',
+      tip2: '均衡饮食',
+      tip2_desc: '饮食中应包含水果、蔬菜和全谷物。',
+      tip3: '心理健康',
+      tip3_desc: '保持社交联系，练习正念。',
+      tipsTitle: '健康小贴士',
+      bullet1: '每天饮水6-8杯。',
+      bullet2: '定期进行全科医生健康检查。',
+      bullet3: '限制饮酒，避免吸烟。',
+      resourcesTitle: '实用资源',
+      resources: {
+        healthdirect: 'HealthDirect——权威医疗建议',
+        beyondblue: 'Beyond Blue——心理健康支持',
+        seniorsonline: '维州老年人在线'
+      }
     },
 
     loginTitle: '登录',
@@ -157,12 +241,33 @@ const messages = {
     nav: {
       home: 'ہوم',
       about: 'ہمارے بارے میں',
-      health: 'صحت اور فلاح',
+      health: 'صحت',
       community: 'کمیونٹی پروگرامز',
       skills: 'ڈیجیٹل اسکلز حب',
       caregiver: 'نگہداشت وسائل',
       help: 'مدد مرکز',
-      donate: 'عطیہ'
+      donate: 'عطیہ',
+      admin: 'ایڈمن ڈیش بورڈ'
+    },
+
+    health: {
+      description: 'سینئرز کے لیے تیار کردہ ان عملی تجاویز کے ساتھ صحت مند رہیں۔',
+      tip1: 'سرگرم رہیں',
+      tip1_desc: 'جسمانی طاقت برقرار رکھنے کے لیے باقاعدہ چہل قدمی یا ہلکی ورزش کریں۔',
+      tip2: 'متوازن غذا',
+      tip2_desc: 'اپنی خوراک میں پھل، سبزیاں اور اناج شامل کریں۔',
+      tip3: 'ذہنی فلاح',
+      tip3_desc: 'سماجی طور پر جڑے رہیں اور ذہن سازی کی مشق کریں۔',
+      tipsTitle: 'فوری صحت کے نکات',
+      bullet1: 'روزانہ کم از کم 6-8 کپ پانی پیئیں۔',
+      bullet2: 'اپنے جی پی کے ساتھ باقاعدہ صحت کے معائنے کروائیں۔',
+      bullet3: 'شراب نوشی محدود کریں اور تمباکو نوشی سے گریز کریں۔',
+      resourcesTitle: 'مفید وسائل',
+      resources: {
+        healthdirect: 'HealthDirect – مستند طبی مشورہ',
+        beyondblue: 'Beyond Blue – ذہنی صحت کی معاونت',
+        seniorsonline: 'سینئرز آن لائن وکٹوریہ'
+      }
     },
 
     loginTitle: 'لاگ ان کریں',

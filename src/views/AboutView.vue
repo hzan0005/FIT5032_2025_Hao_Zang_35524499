@@ -35,5 +35,4 @@
 </template>
 
 <script setup>
-// 顶部导航栏和辅助设置栏由 App.vue 全局渲染，始终置于页面最顶端
 </script>

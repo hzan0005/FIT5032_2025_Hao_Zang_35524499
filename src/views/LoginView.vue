@@ -1,43 +1,45 @@
 <template>
-  <div class="d-flex justify-content-center align-items-center mt-3" style="min-height: 50vh;">
-    <div class="login-card w-100" style="max-width: 420px;">
-      <div class="text-center mb-4">
-        <h2 class="fw-bold">{{ $t('loginTitle') }}</h2>
-      </div>
-
-      <form @submit.prevent="login">
-        <div class="mb-3">
-          <label class="form-label">{{ $t('username') }}</label>
-          <input
-            v-model="username"
-            type="text"
-            class="form-control"
-            :placeholder="$t('username')"
-            @blur="validateUsername(true)"
-            @input="validateUsername(false)"
-          />
-          <div v-if="errors.username" class="text-danger small mt-1">{{ errors.username }}</div>
+  <div class="container py-4">
+    <div class="d-flex justify-content-center align-items-center mt-3" style="min-height: 50vh;">
+      <div class="login-card w-100" style="max-width: 420px;">
+        <div class="text-center mb-4">
+          <h2 class="fw-bold">{{ $t('loginTitle') }}</h2>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">{{ $t('password') }}</label>
-          <input
-            v-model="password"
-            type="password"
-            class="form-control"
-            :placeholder="$t('password')"
-            @blur="() => validatePassword(true)"
-            @input="() => validatePassword(false)"
-          />
-          <div v-if="errors.password" class="text-danger small mt-1">
-            <div v-for="(msg, i) in errors.password.split('. ')" :key="i">{{ msg.trim() }}.</div>
+        <form @submit.prevent="login">
+          <div class="mb-3">
+            <label class="form-label">{{ $t('username') }}</label>
+            <input
+              v-model="username"
+              type="text"
+              class="form-control"
+              :placeholder="$t('username')"
+              @blur="validateUsername(true)"
+              @input="validateUsername(false)"
+            />
+            <div v-if="errors.username" class="text-danger small mt-1">{{ errors.username }}</div>
           </div>
-        </div>
 
-        <div v-if="error" class="alert alert-danger py-2 text-center small">{{ error }}</div>
+          <div class="mb-3">
+            <label class="form-label">{{ $t('password') }}</label>
+            <input
+              v-model="password"
+              type="password"
+              class="form-control"
+              :placeholder="$t('password')"
+              @blur="() => validatePassword(true)"
+              @input="() => validatePassword(false)"
+            />
+            <div v-if="errors.password" class="text-danger small mt-1">
+              <div v-for="(msg, i) in errors.password.split('. ')" :key="i">{{ msg.trim() }}.</div>
+            </div>
+          </div>
 
-        <button type="submit" class="btn btn-dark w-100">{{ $t('loginBtn') }}</button>
-      </form>
+          <div v-if="error" class="alert alert-danger py-2 text-center small">{{ error }}</div>
+
+          <button type="submit" class="btn btn-dark w-100">{{ $t('loginBtn') }}</button>
+        </form>
+      </div>
     </div>
   </div>
 </template>
@@ -112,7 +114,13 @@ const login = async () => {
     }
 
     localStorage.setItem('loggedInUser', user.username)
-    router.push('/')
+    localStorage.setItem('currentUser', JSON.stringify(user))
+    window.dispatchEvent(new Event('storage'))  // 通知其他组件状态变化
+    if (user.role === 'admin') {
+      router.push('/admin')    // 管理员 → 管理后台
+    } else {
+      router.push('/')         // 普通用户 → 首页
+    }
   } catch (e) {
     error.value = t('loginException')
   }
