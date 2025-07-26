@@ -17,7 +17,7 @@
     >
       <h4 class="text-center">{{ section }} Section</h4>
 
-      <!-- 星级选择 -->
+      <!-- Star Rating -->
       <div class="mb-2 text-center">
         <button
           v-for="n in 5"
@@ -34,7 +34,7 @@
         </span>
       </div>
 
-      <!-- 评论输入 -->
+      <!-- Comment Input -->
       <textarea
         v-model="userRatings[section].comment"
         class="form-control mb-2"
@@ -43,18 +43,18 @@
         :disabled="hasRated(section)"
       ></textarea>
 
-      <!-- 提交按钮 -->
+      <!-- Submit Button -->
       <div class="text-center">
         <button
           class="btn btn-primary"
           @click="submitRating(section)"
-          :disabled="hasRated(section)"
+          :disabled="hasRated(section) || isSubmitting"
         >
-          {{ hasRated(section) ? 'Rated' : 'Submit Rating' }}
+          {{ hasRated(section) ? 'Rated' : (isSubmitting ? 'Submitting...' : 'Submit Rating') }}
         </button>
       </div>
 
-      <!-- 显示平均评分和评论 -->
+      <!-- Show Average Rating and Comments -->
       <div class="mt-3">
         <p class="mb-1">
           <strong>Average:</strong>
@@ -68,7 +68,7 @@
             class="list-group-item"
           >
             <div><strong>★ {{ entry.rating }}</strong></div>
-            <div>{{ entry.comment }}</div>
+            <div v-html="escapeHTML(entry.comment)"></div>
             <div class="text-muted small mt-1">
               — {{ entry.username }} • {{ formatDate(entry.timestamp) }}
             </div>
@@ -95,16 +95,14 @@ const allRatings = ref({})
 const currentUser = ref(null)
 const showAll = ref({})
 const loading = ref(true)
+const isSubmitting = ref(false)
 
 onMounted(async () => {
-  console.log('🔍 onMounted start')
   const userData = localStorage.getItem('currentUser')
 
   if (userData) {
     currentUser.value = JSON.parse(userData)
-    console.log('✅ currentUser =', currentUser.value)
   } else {
-    console.warn('⚠️ 未登录，跳过加载评分')
     loading.value = false
     return
   }
@@ -112,7 +110,6 @@ onMounted(async () => {
   try {
     const response = await fetch('/data/ratings.json')
     const baseData = await response.json()
-    console.log('✅ ratings.json loaded:', baseData)
 
     const localData = JSON.parse(localStorage.getItem('localRatings') || '{}')
 
@@ -126,7 +123,7 @@ onMounted(async () => {
       showAll.value[section] = false
     })
   } catch (error) {
-    console.error('❌ Failed to load /data/ratings.json:', error)
+    console.error('Failed to load /data/ratings.json:', error)
   } finally {
     loading.value = false
   }
@@ -152,14 +149,30 @@ const averageRating = (section) => {
 }
 
 const submitRating = (section) => {
+  if (isSubmitting.value) return
+  isSubmitting.value = true
+
   const { rating, comment } = userRatings.value[section]
-  if (rating === 0) return alert('Please select a rating.')
-  if (hasRated(section)) return alert('You have already rated this section.')
+  if (rating === 0) {
+    alert('Please select a rating.')
+    isSubmitting.value = false
+    return
+  }
+  if (hasRated(section)) {
+    alert('You have already rated this section.')
+    isSubmitting.value = false
+    return
+  }
+  if (comment.trim().length < 5) {
+    alert('Comment must be at least 5 characters.')
+    isSubmitting.value = false
+    return
+  }
 
   const newEntry = {
     username: currentUser.value.username,
     rating,
-    comment,
+    comment: comment.trim(),
     timestamp: new Date().toISOString()
   }
 
@@ -178,6 +191,9 @@ const submitRating = (section) => {
   localStorage.setItem('ratedUsers', JSON.stringify(ratedUsers))
 
   alert(`Thanks for rating the ${section} section!`)
+  setTimeout(() => {
+    isSubmitting.value = false
+  }, 1000)
 }
 
 const toggleShow = (section) => {
@@ -187,6 +203,15 @@ const toggleShow = (section) => {
 const formatDate = (timestamp) => {
   const date = new Date(timestamp)
   return date.toLocaleString()
+}
+
+const escapeHTML = (str) => {
+  if (!str) return ''
+  return str.replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;')
 }
 </script>
 
