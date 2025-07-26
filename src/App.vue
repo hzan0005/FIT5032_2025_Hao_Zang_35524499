@@ -1,17 +1,22 @@
 <!-- App.vue -->
 <template>
   <div id="app" class="d-flex flex-column min-vh-100">
+    <!-- 全局导航栏 -->
     <Navbar />
-    <main class="flex-grow-1">
-      <div class="container px-3">
-        <router-view />
-      </div>
+
+    <!-- 页面主内容：始终居中且宽度固定 -->
+    <main class="flex-grow-1 fixed-width">
+      <router-view />
     </main>
+
+    <!-- 全局页脚 -->
+    <Footer />
   </div>
 </template>
 
 <script setup>
 import Navbar from './components/Navbar.vue'
+import Footer from './components/Footer.vue'  // 导入页脚组件
 </script>
 
 <style>
@@ -29,5 +34,12 @@ body {
   flex-direction: column;
   align-items: center;
   background-color: #fff;
+}
+
+.fixed-width {
+  width: 100%;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 </style>

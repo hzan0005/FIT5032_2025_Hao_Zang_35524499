@@ -1,18 +1,26 @@
-<!-- Navbar.vue -->
 <template>
   <!-- 顶部导航栏 -->
   <div class="bg-white border-bottom">
-    <div class="container px-0">
-      <nav class="d-flex flex-wrap justify-content-center gap-3 py-2 text-center overflow-x-auto" style="max-width: 100%;">
-        <router-link class="nav-link text-dark fw-semibold" to="/">{{ $t('nav.home') }}</router-link>
-        <router-link class="nav-link text-dark fw-semibold" to="/about">{{ $t('nav.about') }}</router-link>
-        <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.health') }}</a>
-        <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.community') }}</a>
-        <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.skills') }}</a>
-        <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.caregiver') }}</a>
-        <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.help') }}</a>
-        <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.donate') }}</a>
-      </nav>
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-center py-2">
+        <!-- 左侧导航链接 -->
+        <nav class="d-flex flex-wrap gap-3">
+          <router-link class="nav-link text-dark fw-semibold" to="/">{{ $t('nav.home') }}</router-link>
+          <router-link class="nav-link text-dark fw-semibold" to="/about">{{ $t('nav.about') }}</router-link>
+          <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.health') }}</a>
+          <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.community') }}</a>
+          <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.skills') }}</a>
+          <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.caregiver') }}</a>
+          <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.help') }}</a>
+          <a class="nav-link text-dark fw-semibold" href="#">{{ $t('nav.donate') }}</a>
+        </nav>
+
+        <!-- 右侧登录注册 -->
+        <div class="d-flex gap-2">
+          <router-link class="btn btn-outline-dark btn-sm" to="/login">{{ $t('loginBtn') }}</router-link>
+          <router-link class="btn btn-dark btn-sm" to="/register">{{ $t('registerBtn') }}</router-link>
+        </div>
+      </div>
     </div>
   </div>
 

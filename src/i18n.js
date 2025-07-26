@@ -2,6 +2,13 @@ import { createI18n } from 'vue-i18n'
 
 const messages = {
   en: {
+    // 通用
+    submit: 'Submit',
+    cancel: 'Cancel',
+    close: 'Close',
+    success: 'Success',
+    error: 'Error',
+
     // 页面标题与内容
     welcome: 'Welcome to Our Charity Website',
     subtitle: 'Helping older Australians stay healthy, connected and empowered.',
@@ -34,10 +41,39 @@ const messages = {
       caregiver: 'Caregiver Resources',
       help: 'Help Centre',
       donate: 'Donate'
-    }
+    },
+
+    // 登录/注册页面
+    loginTitle: 'Login',
+    registerTitle: 'Register',
+    username: 'Username',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    loginBtn: 'Login',
+    registerBtn: 'Register',
+    loginError: 'Invalid username or password',
+    loginException: 'Login error, please try again later',
+    registerSuccess: 'Registration successful. Please log in.',
+    registerError: 'Username already exists.',
+    registerException: 'Registration error, please try again later',
+    toRegister: 'No account? Register',
+    toLogin: 'Already have an account? Login',
+
+    // 表单验证提示
+    usernameError: 'Username must be at least 3 characters.',
+    passwordError: 'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.',
+    registerFormInvalid: 'Please correct the errors above.',
+    confirmPasswordError: 'Passwords do not match.'
   },
 
   zh: {
+    // 通用
+    submit: '提交',
+    cancel: '取消',
+    close: '关闭',
+    success: '成功',
+    error: '错误',
+
     welcome: '欢迎来到我们的慈善网站',
     subtitle: '帮助老年人保持健康、联系和自立。',
     explore: '探索服务',
@@ -67,10 +103,37 @@ const messages = {
       caregiver: '照护者资源',
       help: '帮助中心',
       donate: '捐赠'
-    }
+    },
+
+    loginTitle: '登录',
+    registerTitle: '注册',
+    username: '用户名',
+    password: '密码',
+    confirmPassword: '确认密码',
+    loginBtn: '登录',
+    registerBtn: '注册',
+    loginError: '用户名或密码错误',
+    loginException: '登录异常，请稍后重试',
+    registerSuccess: '注册成功，请登录。',
+    registerError: '用户名已存在。',
+    registerException: '注册异常，请稍后重试',
+    toRegister: '没有账号？去注册',
+    toLogin: '已有账号？去登录',
+
+    usernameError: '用户名至少3个字符。',
+    passwordError: '密码至少8个字符，且包含大小写字母、数字和特殊字符。',
+    registerFormInvalid: '请修正以上错误。',
+    confirmPasswordError: '两次输入的密码不一致。'
   },
 
   ur: {
+    // عمومی
+    submit: 'جمع کروائیں',
+    cancel: 'منسوخ کریں',
+    close: 'بند کریں',
+    success: 'کامیابی',
+    error: 'خرابی',
+
     welcome: 'ہماری خیراتی ویب سائٹ میں خوش آمدید',
     subtitle: 'بزرگ آسٹریلینز کی صحت، روابط اور خود انحصاری میں مدد کریں۔',
     explore: 'اہم خدمات دریافت کریں',
@@ -100,12 +163,31 @@ const messages = {
       caregiver: 'نگہداشت وسائل',
       help: 'مدد مرکز',
       donate: 'عطیہ'
-    }
+    },
+
+    loginTitle: 'لاگ ان کریں',
+    registerTitle: 'رجسٹر کریں',
+    username: 'صارف نام',
+    password: 'پاس ورڈ',
+    confirmPassword: 'پاس ورڈ کی تصدیق کریں',
+    loginBtn: 'لاگ ان',
+    registerBtn: 'رجسٹر',
+    loginError: 'غلط صارف نام یا پاس ورڈ',
+    loginException: 'لاگ ان کی خرابی، بعد میں دوبارہ کوشش کریں',
+    registerSuccess: 'رجسٹریشن کامیاب، براہ کرم لاگ ان کریں',
+    registerError: 'صارف نام پہلے سے موجود ہے',
+    registerException: 'رجسٹریشن کی خرابی، براہ کرم بعد میں دوبارہ کوشش کریں',
+    toRegister: 'اکاؤنٹ نہیں ہے؟ رجسٹر کریں',
+    toLogin: 'پہلے سے اکاؤنٹ ہے؟ لاگ ان کریں',
+    usernameError: 'صارف نام کم از کم 3 حروف پر مشتمل ہونا چاہیے۔',
+    passwordError: 'پاس ورڈ میں 8 حروف، بڑے اور چھوٹے حروف، نمبر اور خاص علامت ہونی چاہیے۔',
+    registerFormInvalid: 'براہ کرم اوپر کی غلطیاں درست کریں۔',
+    confirmPasswordError: 'پاس ورڈ مماثل نہیں ہیں۔'
   }
 }
 
 const i18n = createI18n({
-  legacy: false, // 使用 Composition API 模式
+  legacy: false,
   locale: 'en',
   fallbackLocale: 'en',
   messages
