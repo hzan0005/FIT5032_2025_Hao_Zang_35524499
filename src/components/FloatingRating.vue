@@ -7,14 +7,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const isAuthenticated = ref(false)
 
-onMounted(() => {
+const checkAuth = () => {
   isAuthenticated.value = !!localStorage.getItem('currentUser')
+}
+
+onMounted(() => {
+  checkAuth()
+  window.addEventListener('storage', checkAuth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('storage', checkAuth)
 })
 
 const goToRating = () => {
