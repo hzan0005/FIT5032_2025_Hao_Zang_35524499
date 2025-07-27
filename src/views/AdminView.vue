@@ -1,50 +1,61 @@
 <template>
-  <div class="container py-4">
-    <div class="admin-container">
-      <h1 class="mb-4">Admin Dashboard</h1>
+  <div class="container py-5">
+    <div class="admin-container bg-white p-4 rounded shadow-lg">
+
+      <!-- 标题 -->
+      <h1 class="mb-4 text-primary">Admin Dashboard</h1>
 
       <!-- 欢迎信息 -->
-      <div class="mb-4">
-        <p>Welcome, <strong>{{ currentUser?.username }}</strong> ({{ currentUser?.role }}).</p>
+      <div class="alert alert-light border mb-4">
+        Welcome, <strong>{{ currentUser?.username }}</strong> ({{ currentUser?.role }})
       </div>
 
       <!-- 用户列表 -->
       <section class="mb-5">
-        <h4>User List</h4>
-        <ul class="list-group">
-          <li class="list-group-item" v-for="(user, index) in users" :key="index">
-            {{ user.username }} – <span class="text-muted">{{ user.role }}</span>
+        <h4 class="text-secondary mb-3">👥 Registered Users</h4>
+        <ul class="list-group shadow-sm">
+          <li class="list-group-item d-flex justify-content-between align-items-center" v-for="(user, index) in users" :key="index">
+            <span>{{ user.username }}</span>
+            <span class="badge bg-secondary text-uppercase">{{ user.role }}</span>
           </li>
         </ul>
       </section>
 
-      <!-- 添加新用户（本地新增，仅更新前端列表） -->
+      <hr />
+
+      <!-- 添加新用户 -->
       <section class="mb-5">
-        <h4>Add New User</h4>
-        <form @submit.prevent="addUser">
-          <div class="mb-3">
-            <input v-model="newUser.username" class="form-control" type="text" placeholder="Username" required />
+        <h4 class="text-secondary mb-3">➕ Add New User</h4>
+        <form @submit.prevent="addUser" class="bg-light p-3 rounded shadow-sm">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <input v-model="newUser.username" class="form-control" type="text" placeholder="Username" required />
+            </div>
+            <div class="col-md-4">
+              <input v-model="newUser.password" class="form-control" type="password" placeholder="Password" required />
+            </div>
+            <div class="col-md-4">
+              <select v-model="newUser.role" class="form-select" required>
+                <option value="" disabled>Select Role</option>
+                <option value="admin">Admin</option>
+                <option value="user">User</option>
+              </select>
+            </div>
           </div>
-          <div class="mb-3">
-            <input v-model="newUser.password" class="form-control" type="password" placeholder="Password" required />
+          <div class="text-end mt-3">
+            <button class="btn btn-success" type="submit">Add User</button>
           </div>
-          <div class="mb-3">
-            <select v-model="newUser.role" class="form-select" required>
-              <option value="" disabled>Select Role</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" type="submit">Add User</button>
         </form>
       </section>
 
-      <!-- 日志占位 -->
+      <hr />
+
+      <!-- 日志记录 -->
       <section>
-        <h4>Recent Logs (Mock)</h4>
-        <ul class="text-muted small">
-          <li>admin logged in – 2025-07-26 10:12</li>
-          <li>user password changed – 2025-07-25 20:30</li>
+        <h4 class="text-secondary mb-3">🕒 Recent Logs</h4>
+        <ul class="list-group list-group-flush small text-muted">
+          <li class="list-group-item">admin logged in – 2025-07-26 10:12</li>
+          <li class="list-group-item">user password changed – 2025-07-25 20:30</li>
         </ul>
       </section>
     </div>
@@ -58,7 +69,6 @@ const currentUser = ref(null)
 const users = ref([])
 const newUser = ref({ username: '', password: '', role: '' })
 
-// 加载本地 public/data/user.json 文件
 const loadUsers = async () => {
   try {
     const res = await fetch('/data/users.json')
@@ -75,7 +85,6 @@ onMounted(() => {
   loadUsers()
 })
 
-// 本地新增用户（不会写入 JSON 文件，仅更新 users 列表）
 const addUser = () => {
   if (newUser.value.username && newUser.value.password && newUser.value.role) {
     users.value.push({ ...newUser.value })
@@ -87,14 +96,10 @@ const addUser = () => {
 
 <style scoped>
 .admin-container {
-  padding: 2rem;
-  max-width: 900px;
+  max-width: 960px;
   margin: auto;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }
 h1 {
-  color: #2c3e50;
+  font-weight: bold;
 }
 </style>

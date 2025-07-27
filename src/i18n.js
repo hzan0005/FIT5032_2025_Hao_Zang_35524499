@@ -1,48 +1,6 @@
 import { createI18n } from 'vue-i18n'
 
 const messages = {
-    community: {
-      description: 'Explore fun, social and supportive community events made just for you.',
-      event1: 'Coffee & Chat Morning',
-      event1_desc: 'Drop in for casual conversations with new friends every Tuesday.',
-      event2: 'Local Arts Group',
-      event2_desc: 'Join seniors creating crafts, paintings, and memories together.',
-      event3: 'Music & Memory Sessions',
-      event3_desc: 'Sing along to golden oldies and reminisce with others.',
-      joinTitle: 'Ways to Join In',
-      join1: 'Speak with your local community center.',
-      join2: 'Join our online sign-up group with one click.',
-      join3: 'Encourage friends or family to come along.',
-      linksTitle: 'Explore Community Platforms'
-    },
-    community: {
-      description: '探索为您量身打造的有趣、社交和互助的社区活动。',
-      event1: '咖啡闲聊早晨',
-      event1_desc: '每周二来和新朋友轻松畅聊。',
-      event2: '本地艺术小组',
-      event2_desc: '与长者们一起手工、绘画、共创美好回忆。',
-      event3: '音乐与回忆时光',
-      event3_desc: '一起唱响金曲，分享往昔故事。',
-      joinTitle: '参与方式',
-      join1: '联系您所在的社区中心。',
-      join2: '一键加入我们的线上报名群。',
-      join3: '邀请亲友一同参与。',
-      linksTitle: '发现社区平台'
-    },
-    community: {
-      description: 'آپ کے لیے بنائے گئے دلچسپ، سماجی اور معاون کمیونٹی ایونٹس دریافت کریں۔',
-      event1: 'کافی اور گپ شپ صبح',
-      event1_desc: 'ہر منگل نئے دوستوں کے ساتھ خوشگوار گفتگو کے لیے آئیں۔',
-      event2: 'مقامی آرٹس گروپ',
-      event2_desc: 'سینئرز کے ساتھ دستکاری، پینٹنگ اور یادیں بنائیں۔',
-      event3: 'موسیقی اور یادیں سیشنز',
-      event3_desc: 'پرانے گانوں پر گائیں اور دوسروں کے ساتھ یادیں تازہ کریں۔',
-      joinTitle: 'شمولیت کے طریقے',
-      join1: 'اپنے مقامی کمیونٹی سینٹر سے بات کریں۔',
-      join2: 'ایک کلک میں ہمارے آن لائن سائن اپ گروپ میں شامل ہوں۔',
-      join3: 'دوستوں یا خاندان کو ساتھ لائیں۔',
-      linksTitle: 'کمیونٹی پلیٹ فارمز دریافت کریں'
-    },
   en: {
     // 通用
     submit: 'Submit',

@@ -41,3 +41,59 @@ const cards = [
   { title: 'Caregiver Tools', description: 'desc4' }
 ]
 </script>
+<style scoped>
+/* 卡片整体美化 */
+.border.p-3.h-100 {
+  border-radius: 12px;
+  transition: box-shadow 0.2s ease-in-out;
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+}
+
+.border.p-3.h-100:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 图片占位美化 */
+.border.bg-light.p-2.mb-3 {
+  height: 120px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* 标题加粗微调 */
+h5.fw-semibold {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 响应式间距调整 */
+.row-cols-1 .col,
+.row-cols-md-2 .col,
+.row-cols-lg-4 .col {
+  padding-bottom: 1rem;
+}
+
+/* 更新内容样式 */
+.col-md-6 p {
+  font-size: 0.95rem;
+}
+
+/* 搜索输入框样式 */
+input.form-control {
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.2s;
+}
+
+input.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+}
+</style>

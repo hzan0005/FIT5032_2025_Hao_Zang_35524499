@@ -36,3 +36,45 @@
 
 <script setup>
 </script>
+
+<style scoped>
+.container {
+  background-color: #fdfdfd;
+  padding: 2rem 1rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+}
+
+h1.fw-bold {
+  font-size: 2.2rem;
+  color: #2c3e50;
+}
+
+p.fs-5 {
+  color: #555;
+  font-size: 1.1rem;
+  max-width: 720px;
+  margin: auto;
+}
+
+h4.fw-semibold {
+  font-size: 1.3rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+p, li {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+ul {
+  padding-left: 1.2rem;
+  list-style-type: disc;
+}
+
+ul li {
+  margin-bottom: 0.6rem;
+}
+</style>
