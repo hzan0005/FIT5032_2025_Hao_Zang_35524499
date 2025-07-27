@@ -4,113 +4,72 @@
 
 This is a Vue 3 + Vite based web application designed for a charity organization focused on supporting older Australians. The website provides health information, community programs, digital skills training, and caregiver resources.
 
+A responsive and secure web application designed to support older adults in accessing health, skill, community, and caregiving resources. This project implements multiple features according to **Business Requirements A, B, and C**.
+
 ---
 
-## Features
+## Overview
 
-- **Responsive Navigation Bar:**  
-  Supports multi-language switching (English, Chinese, Urdu), font size adjustment, and accessibility options.
+This application allows users to register, log in, browse different support sections, leave ratings and comments, and interact with accessibility and multilingual features. Admins have access to a dashboard for privileged operations.
 
-- **User Registration and Login:**  
-  Includes robust client-side validation for usernames and passwords with password strength enforcement.
+---
 
-- **Localization:**  
-  Fully internationalized interface with `vue-i18n`.
+## Implemented Business Requirements
 
-- **Dynamic Content:**  
-  Data-driven pages loading from JSON and Vue state.
+### **Category A: General Functionality**
+- **A.1 Multi-page Navigation**: Implemented using Vue Router. Supports navigation across `Home`, `About`, `Health`, `Community`, `Skills`, `Caregiver`, `Help`, and `Donate` pages.
+- **A.2 Responsive Design**: Fully responsive layout using custom CSS and media queries (no CSS frameworks used).
+- **A.3 Role-based Access**: Admin-only route (`/admin`) is protected and only visible to users with role `"admin"`.
 
-- **Global Footer Component:**  
-  Consistent footer across all pages.
+---
 
-- **State Management:**  
-  Local storage used for user data persistence (with potential for backend integration).
+### **Category B: Dynamic Behaviour & Validation**
+- **B.1 Input Validation**:
+  - Registration form validates:
+    - Username (min 3 characters)
+    - Password (min 8 characters with upper/lowercase, number, symbol)
+  - Comments limited to safe lengths and formats
+- **B.2 Dynamic Data Rendering**:
+  - User reviews and ratings for each section (`Health`, `Skills`, `Community`, `Caregiver`) are loaded from a local JSON file and updated dynamically
+  - Rating averages and pagination implemented
 
-- **Routing:**  
-  Vue Router used for seamless page navigation.
+---
 
-- **Accessibility:**  
-  Font size controls and screen reader support.
+### **Category C: Authentication, Ratings & Security**
+- **C.1 Authentication**:
+  - LocalStorage-based login and registration system
+  - Session stored as `currentUser` in `localStorage`
+- **C.2 Role-based Access**:
+  - Navigation and page access depend on user's role (`user` or `admin`)
+- **C.3 Rating System**:
+  - Each section includes a star rating system with comment input
+  - User feedback is displayed with average rating and pagination
+- **C.4 Security**:
+  - Escaped user inputs to prevent XSS attacks (no `v-html` usage)
+  - Front-end input validation for all form fields
+  - All user-generated content is safely rendered as plain text
+  - Measures follow [OWASP XSS prevention guidelines](https://owasp.org/www-community/xss-prevention)
+
+---
+
+## Tech Stack
+
+- **Frontend**: Vue 3 + Vue Router + Composition API
+- **Language Support**: i18n (`EN` / `中文` / `Urdu`)
+- **Data Storage**: `localStorage` and local `.json` files
+- **No CSS Framework**: All layout and styling use custom CSS
 
 ---
 
 ## Project Structure
+<pre> src/ ├── assets/ ├── components/ │ └── Navbar.vue ├── views/ │ ├── HomeView.vue │ ├── LoginView.vue │ ├── RegisterView.vue │ ├── HealthView.vue │ ├── SkillsView.vue │ ├── CommunityView.vue │ ├── CaregiverView.vue │ ├── AboutView.vue │ ├── HelpView.vue │ ├── DonateView.vue │ ├── AdminView.vue │ └── AccessDenied.vue ├── data/ │ ├── users.json │ └── comments.json ├── router/ │ └── index.js ├── i18n/ │ └── messages.js ├── App.vue └── main.js </pre>
 
-- `/src/components` — Reusable Vue components like `Navbar.vue` and `Footer.vue`  
-- `/src/views` — Page components (`HomeView.vue`, `LoginView.vue`, `RegisterView.vue`, `LoginView.vue`, `AboutView.vue`)  
-- `/public/data` — Static JSON files for initial user data and other content  
-- `/src/i18n.js` — Localization setup and language messages  
-- `/src/App.vue` — Root component containing global layout (navbar, footer, router-view)
-
----
-
-## Setup and Run
-
-1. **Install dependencies:**
-
-    ```bash
-    npm install
-    ```
-
-2. **Start development server:**
-
-    ```bash
-    npm run dev
-    ```
-
-3. **Build for production:**
-
-    ```bash
-    npm run build
-    ```
-
-4. **Preview production build locally:**
-
-    ```bash
-    npm run preview
-    ```
-
----
-
-## User Management Notes
-
-- User registration data is currently stored in the browser's **localStorage**.  
-- Initial user data is seeded from a static JSON file (`/public/data/users.json`).  
-- Login verifies credentials against both the JSON data and locally stored users.  
-- Future improvements may include backend API integration for persistent user management.
-
----
-
-## Internationalization (i18n)
-
-- Supported languages:  
-  - English (`en`)  
-  - Simplified Chinese (`zh`)  
-  - Urdu (`ur`)  
-
-- All UI text, buttons, validation messages, navigation items, and footer content are localized.  
-- Language switcher in the header updates the interface dynamically.
-
----
-
-## Accessibility Features
-
-- Adjustable font size controls to improve readability.  
-- Screen reader support button for enhanced accessibility.  
-- Responsive design for desktop and mobile devices.
-
----
-
-## Contribution
-
-Contributions are welcome! Please fork the repository and submit pull requests for bug fixes or enhancements.
-
----
+## Author
+Zang Hao
+Web Application Development – Assignment 2
+Monash University, 2025
 
 ## License
+This project is for educational use only.
+No distribution or commercial use permitted.
 
-This project is licensed under the MIT License.
-
----
-
-© 2025 Healthy Seniors Charity
