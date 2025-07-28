@@ -1,7 +1,7 @@
 <!-- AboutView.vue -->
 <template>
   <div>
-    <!-- 页面内容主体 -->
+    <!-- Main page content -->
     <div class="container mt-5 pt-4">
       <div class="text-center mb-4">
         <h1 class="fw-bold">{{ $t('nav.about') }}</h1>

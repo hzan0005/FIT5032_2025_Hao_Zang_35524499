@@ -6,14 +6,14 @@
         Healthy Seniors
       </router-link>
 
-      <!-- 登录 / 注册 / 登出按钮 -->
+      <!-- Login / Register / Logout buttons -->
       <div class="d-flex gap-2 order-xl-3 ms-auto">
         <router-link v-if="!isAuthenticated" class="btn btn-outline-dark btn-sm" to="/login">{{ $t('loginBtn') }}</router-link>
         <router-link v-if="!isAuthenticated" class="btn btn-dark btn-sm" to="/register">{{ $t('registerBtn') }}</router-link>
         <button v-else class="btn btn-outline-danger btn-sm" @click="handleLogout">{{ $t('logout') || 'Logout' }}</button>
       </div>
 
-      <!-- 折叠按钮 -->
+      <!-- Collapse button -->
       <button
         class="navbar-toggler order-xl-2 ms-2"
         type="button"
@@ -26,7 +26,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- 折叠菜单 -->
+      <!-- Collapsible menu -->
       <div class="collapse navbar-collapse order-xl-1" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-xl-0">
           <li class="nav-item"><router-link class="nav-link" to="/">{{ $t('nav.home') }}</router-link></li>
@@ -45,10 +45,10 @@
     </div>
   </nav>
 
-  <!-- 分割线 -->
+  <!-- Divider -->
   <hr class="m-0" />
 
-  <!-- 辅助设置栏 -->
+  <!-- Accessibility settings bar -->
   <div class="bg-white py-2 border-bottom">
     <div class="container d-flex justify-content-center flex-wrap gap-2 text-center">
       <button class="btn btn-outline-dark btn-sm" @click="increaseFont">A+</button>

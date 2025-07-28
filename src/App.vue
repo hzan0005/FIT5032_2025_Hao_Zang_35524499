@@ -1,26 +1,26 @@
 <!-- App.vue -->
 <template>
   <div id="app" class="d-flex flex-column min-vh-100">
-    <!-- 全局导航栏 -->
+    <!-- Global Navbar -->
     <Navbar />
 
-    <!-- 页面主内容：始终居中且宽度固定 -->
+    <!-- Main page content: always centered and fixed width -->
     <main class="flex-grow-1">
       <div class="page-container py-4">
         <router-view />
       </div>
     </main>
 
-    <!-- 全局页脚 -->
+    <!-- Global Footer -->
     <Footer />
-    <!-- 悬浮评分组件 -->
+    <!-- Floating Rating Component -->
     <FloatingRating />
   </div>
 </template>
 
 <script setup>
 import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'  // 导入页脚组件
+import Footer from './components/Footer.vue'  // Import Footer component
 import FloatingRating from './components/FloatingRating.vue'
 </script>
 
