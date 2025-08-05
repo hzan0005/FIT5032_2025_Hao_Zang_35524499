@@ -1,14 +1,14 @@
 // src/auth.js
-import { ref } from 'vue'
+import { getAuth, signOut } from 'firebase/auth'
 
-export const isAuthenticated = ref(localStorage.getItem('isAuthenticated') === 'true')
+export function logout() {
+  const auth = getAuth()
+  signOut(auth).then(() => {
+    console.log('User signed out.')
+    console.log('Current user:', auth.currentUser)  // 应为 null ✅
 
-export const login = () => {
-  localStorage.setItem('isAuthenticated', 'true')
-  isAuthenticated.value = true
-}
-
-export const logout = () => {
-  localStorage.removeItem('isAuthenticated')
-  isAuthenticated.value = false
+    localStorage.removeItem('isAuthenticated')
+    localStorage.removeItem('firebaseUser')
+    localStorage.removeItem('userRole')
+  })
 }
