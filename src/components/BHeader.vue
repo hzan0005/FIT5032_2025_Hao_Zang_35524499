@@ -57,7 +57,7 @@ const handleLogout = () => {
          <router-link to="/countbookapi" class="nav-link" active-class="active">Count Book API</router-link>
         </li>
         <li class="nav-item">
-         <router-link to="/GetAllBookAPI" class="nav-link" active-class="active">All Books API</router-link>
+         <router-link to="/getallbookapi" class="nav-link" active-class="active">All Books API</router-link>
         </li>
         <li class="nav-item" v-if="!isAuthenticated">
           <router-link to="/firebase-signin" class="nav-link" active-class="active" exact-active-class="active">Login</router-link>
