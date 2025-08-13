@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 export default defineConfig({
+  // 👇 关键：开发用 / ，部署到 GitHub Pages 用 /<repo>/
   base: process.env.NODE_ENV === 'production' ? '/FIT5032_2025_Hao_Zang_35524499/' : '/',
   plugins: [
     vue(),
