@@ -70,6 +70,9 @@
           <li class="nav-item" v-if="currentUser.role === 'admin'">
             <router-link class="nav-link" to="/sendemail">Send Email</router-link>
           </li>
+          <li class="nav-item" v-if="currentUser.role === 'admin'">
+            <router-link class="nav-link" to="/admin/data">Interactive Data</router-link>
+          </li>
         </ul>
       </div>
     </div>

@@ -1,99 +1,133 @@
-<!-- HomeView.vue -->
 <template>
-  <div class="container mt-5">
-    <div class="text-center mb-4">
-      <h1 class="fw-bold">{{ $t('welcome') }}</h1>
-      <p class="fs-5">{{ $t('subtitle') }}</p>
-    </div>
+  <div class="home-page">
+    <section class="hero-section text-center text-white d-flex align-items-center justify-content-center">
+      <div class="hero-content">
+        <h1 class="display-3 fw-bold">Live Healthier, Happier & Connected</h1>
+        <p class="lead my-4 mx-auto" style="max-width: 700px;">
+          Welcome to Healthy Seniors, your trusted partner in navigating a vibrant and independent life.
+        </p>
+        <router-link to="/about" class="btn btn-primary btn-lg">Learn More About Us</router-link>
+        <router-link to="/donate" class="btn btn-light btn-lg ms-2">Support Our Cause</router-link>
+      </div>
+    </section>
 
-    <hr />
-    <h4 class="mb-3">{{ $t('explore') }}</h4>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-      <div class="col" v-for="card in cards" :key="card.title">
-        <div class="border p-3 h-100 text-center">
-          <div class="border border-secondary-subtle bg-light p-2 mb-3">Image Placeholder</div>
-          <h5 class="fw-semibold">{{ $t(card.title) }}</h5>
-          <p class="text-muted small">{{ $t(card.description) }}</p>
+    <section class="services-section py-5">
+      <div class="container">
+        <h2 class="text-center fw-bold mb-5">Explore Our Core Services</h2>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-3" v-for="card in cards" :key="card.title">
+            <div class="service-card text-center p-4 h-100">
+              <img :src="card.icon" :alt="card.title" class="service-icon mb-3">
+              <h4 class="fw-semibold">{{ card.title }}</h4>
+              <p class="text-muted">{{ card.description }}</p>
+              <router-link :to="card.link" class="stretched-link"></router-link>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <hr class="my-4" />
-    <div class="row">
-      <div class="col-md-6 mb-4">
-        <h5 class="fw-semibold">{{ $t('updates') }}</h5>
-        <p><strong>July 2025:</strong> {{ $t('update1') }}</p>
-        <p><strong>June 2025:</strong> {{ $t('update2') }}</p>
+    <section class="impact-section py-5 bg-light">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-6">
+            <h2 class="fw-bold">Making a Tangible Difference</h2>
+            <p class="fs-5 text-secondary">
+              For over a decade, we have been at the forefront of senior support, creating programs that foster health, skill development, and community bonds. Your support helps us continue this vital work.
+            </p>
+            <div class="d-flex mt-4">
+              <div class="me-4">
+                <div class="fs-2 fw-bold text-primary">10,000+</div>
+                <div class="text-muted">Seniors Supported</div>
+              </div>
+              <div>
+                <div class="fs-2 fw-bold text-primary">500+</div>
+                <div class="text-muted">Workshops Hosted</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <img src="/images/our-impact-section.jpg" class="img-fluid rounded shadow-lg" alt="A collage of happy seniors participating in various activities.">
+          </div>
+        </div>
       </div>
-      <div class="col-md-6 mb-4">
-        <h5 class="fw-semibold">{{ $t('search') }}</h5>
-        <input type="text" class="form-control" :placeholder="$t('searchPlaceholder')" />
-      </div>
-    </div>
+    </section>
+
+     <section class="news-section py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">Latest News & Updates</h2>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="news-card p-4">
+                        <p class="text-muted small"><strong>July 2025</strong></p>
+                        <h5 class="fw-semibold">New Walking Group Launched in Victoria!</h5>
+                        <p class="text-secondary">Join us every Wednesday morning for a refreshing walk and social chat. A great way to stay active and meet new people.</p>
+                        <a href="#" class="text-primary">Read More</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                     <div class="news-card p-4">
+                        <p class="text-muted small"><strong>June 2025</strong></p>
+                        <h5 class="fw-semibold">Updated Senior Mental Health Guide Now Available</h5>
+                        <p class="text-secondary">Access our comprehensive new guide filled with practical tips and resources for maintaining mental well-being.</p>
+                        <a href="#" class="text-primary">Download Guide</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
   </div>
 </template>
 
 <script setup>
 const cards = [
-  { title: 'Health Info', description: 'desc1' },
-  { title: 'Community Programs', description: 'desc2' },
-  { title: 'Digital Skills', description: 'desc3' },
-  { title: 'Caregiver Tools', description: 'desc4' }
+  { title: 'Health & Wellness', description: 'Access trusted health tips and wellness guides.', icon: '/images/icon-health.png', link: '/health' },
+  { title: 'Community Programs', description: 'Join local social events to stay connected.', icon: '/images/icon-community.png', link: '/community' },
+  { title: 'Digital Skills', description: 'Learn to use devices and stay safe online.', icon: '/images/icon-skills.png', link: '/skills' },
+  { title: 'Caregiver Support', description: 'Find resources for family members and carers.', icon: '/images/icon-caregiver.png', link: '/caregiver' }
 ]
 </script>
+
 <style scoped>
-/* Card overall styling */
-.border.p-3.h-100 {
-  border-radius: 12px;
-  transition: box-shadow 0.2s ease-in-out;
-  background-color: #fff;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+.hero-section {
+  min-height: 70vh;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/homepage-hero-banner.jpg');
+  background-size: cover;
+  background-position: center;
 }
 
-.border.p-3.h-100:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+.hero-content {
+  max-width: 800px;
 }
 
-/* Image placeholder styling */
-.border.bg-light.p-2.mb-3 {
-  height: 120px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #aaa;
-  font-size: 0.9rem;
+.service-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #e9ecef;
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative;
+}
+.service-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+.service-icon {
+    width: 80px;
+    height: 80px;
+}
+.stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    content: "";
 }
 
-/* Title bold adjustment */
-h5.fw-semibold {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-}
-
-/* Responsive spacing adjustment */
-.row-cols-1 .col,
-.row-cols-md-2 .col,
-.row-cols-lg-4 .col {
-  padding-bottom: 1rem;
-}
-
-/* Update content style */
-.col-md-6 p {
-  font-size: 0.95rem;
-}
-
-/* Search input style */
-input.form-control {
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  font-size: 0.95rem;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.2s;
-}
-
-input.form-control:focus {
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.1);
+.news-card {
+    background-color: #f8f9fa;
+    border-radius: 1rem;
+    border: 1px solid #e9ecef;
 }
 </style>

@@ -1,0 +1,91 @@
+
+[
+  {
+    "id": 1,
+    "workshop_name": "Smartphone Basics for Beginners",
+    "skill_level": "Beginner",
+    "instructor": "Jane Smith",
+    "date": "2025-10-05",
+    "spots_available": 15
+  },
+  {
+    "id": 2,
+    "workshop_name": "Using Social Media to Connect",
+    "skill_level": "Beginner",
+    "instructor": "John Doe",
+    "date": "2025-10-12",
+    "spots_available": 10
+  },
+  {
+    "id": 3,
+    "workshop_name": "Email and Online Communication",
+    "skill_level": "Beginner",
+    "instructor": "Sarah Lee",
+    "date": "2025-10-19",
+    "spots_available": 20
+  },
+  {
+    "id": 4,
+    "workshop_name": "Photo Editing on Tablets",
+    "skill_level": "Intermediate",
+    "instructor": "Jane Smith",
+    "date": "2025-10-26",
+    "spots_available": 8
+  },
+  {
+    "id": 5,
+    "workshop_name": "Online Shopping and Safety",
+    "skill_level": "Beginner",
+    "instructor": "Peter Jones",
+    "date": "2025-11-02",
+    "spots_available": 12
+  },
+  {
+    "id": 6,
+    "workshop_name": "Video Calling with Family",
+    "skill_level": "Beginner",
+    "instructor": "Sarah Lee",
+    "date": "2025-11-09",
+    "spots_available": 15
+  },
+  {
+    "id": 7,
+    "workshop_name": "Using Google Maps and Navigation",
+    "skill_level": "Intermediate",
+    "instructor": "John Doe",
+    "date": "2025-11-16",
+    "spots_available": 10
+  },
+  {
+    "id": 8,
+    "workshop_name": "Cybersecurity Basics",
+    "skill_level": "Intermediate",
+    "instructor": "Peter Jones",
+    "date": "2025-11-23",
+    "spots_available": 18
+  },
+  {
+    "id": 9,
+    "workshop_name": "Podcasting for Seniors",
+    "skill_level": "Advanced",
+    "instructor": "Jane Smith",
+    "date": "2025-11-30",
+    "spots_available": 5
+  },
+  {
+    "id": 10,
+    "workshop_name": "Creating a Simple Website",
+    "skill_level": "Advanced",
+    "instructor": "Michael Green",
+    "date": "2025-12-07",
+    "spots_available": 3
+  },
+  {
+    "id": 11,
+    "workshop_name": "Basic Computer Troubleshooting",
+    "skill_level": "Beginner",
+    "instructor": "Michael Green",
+    "date": "2025-12-14",
+    "spots_available": 20
+  }
+]

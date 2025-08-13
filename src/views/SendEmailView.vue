@@ -3,7 +3,6 @@
     <h2 class="mb-4 fw-bold">📧 Send Email with Attachment</h2>
 
     <form ref="formRef" @submit.prevent="handleSendEmail" class="needs-validation" novalidate>
-      <!-- 收件人（写入模板变量，也可放入 message 中） -->
       <div class="mb-3">
         <label class="form-label">To (Recipient Email)</label>
         <input
@@ -40,7 +39,6 @@
         ></textarea>
       </div>
 
-      <!-- 附件：name 必须有；EmailJS 会自动把文件作为附件 -->
       <div class="mb-3">
         <label class="form-label">Attachment</label>
         <input
@@ -50,7 +48,7 @@
           accept=".txt,.json,.pdf,.png,.jpg,.jpeg"
           required
         />
-        <div class="form-text">常见免费额度附件大小有限，建议 < 2–5MB。</div>
+        <div class="form-text">免费额度的附件大小有限，建议小于 2-5MB。</div>
       </div>
 
       <button type="submit" class="btn btn-primary" :disabled="loading">
@@ -67,9 +65,9 @@ import { ref } from 'vue'
 import emailjs from '@emailjs/browser'
 
 // ★★★ 把这三个常量替换成你在 EmailJS 控制台的实际值 ★★★
-const EMAILJS_SERVICE_ID  = 'service_xxx'
-const EMAILJS_TEMPLATE_ID = 'template_xxx'
-const EMAILJS_PUBLIC_KEY  = 'mYpUbLiCkEy'
+const EMAILJS_SERVICE_ID  = 'service_xrgsehe';      // 替换成你的 Service ID
+const EMAILJS_TEMPLATE_ID = 'template_jibo186';     // 替换成你的 Template ID
+const EMAILJS_PUBLIC_KEY  = 'B_2_mWXxDGVkkZDcT';      // 替换成你的 Public Key
 
 const to = ref('')
 const subject = ref('')
@@ -79,31 +77,39 @@ const status = ref('')
 const formRef = ref(null)
 
 const handleSendEmail = async () => {
-  if (!formRef.value) return
+  if (!formRef.value || !formRef.value.checkValidity()) {
+    status.value = '❌ Please fill out all required fields.';
+    formRef.value.classList.add('was-validated');
+    return;
+  }
   loading.value = true
   status.value = ''
 
   try {
-    // 直接把整个 <form> 交给 EmailJS，它会连附件一起发送
+    // 直接把整个 <form> 的 DOM 元素交给 EmailJS
+    // 它会自动收集表单数据（包括文件附件）并发送
     const result = await emailjs.sendForm(
       EMAILJS_SERVICE_ID,
       EMAILJS_TEMPLATE_ID,
       formRef.value,
       { publicKey: EMAILJS_PUBLIC_KEY }
-    )
+    );
 
-    // 这里的 result.text 通常为 "OK"
-    status.value = '✅ Email sent successfully!'
-    // 成功后清空
-    to.value = ''
-    subject.value = ''
-    text.value = ''
-    // 直接清空表单里的文件
-    formRef.value.reset()
+    status.value = '✅ Email sent successfully!';
+    console.log('SUCCESS!', result.status, result.text);
+
+    // 发送成功后清空表单
+    to.value = '';
+    subject.value = '';
+    text.value = '';
+    formRef.value.reset(); // 这个方法会清空所有输入，包括文件
+    formRef.value.classList.remove('was-validated');
+
   } catch (err) {
-    status.value = '❌ Failed to send email: ' + (err?.text || err?.message || String(err))
+    status.value = '❌ Failed to send email: ' + (err?.text || err?.message || String(err));
+    console.error('FAILED...', err);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>

@@ -1,0 +1,90 @@
+[
+  {
+    "id": 1,
+    "event_name": "Morning Walk Group",
+    "location": "Clayton",
+    "date": "2025-09-01",
+    "type": "Health",
+    "registered": 15
+  },
+  {
+    "id": 2,
+    "event_name": "Smartphone Basics Workshop",
+    "location": "Caulfield",
+    "date": "2025-09-05",
+    "type": "Digital Skills",
+    "registered": 22
+  },
+  {
+    "id": 3,
+    "event_name": "Social Coffee Meetup",
+    "location": "Glen Waverley",
+    "date": "2025-09-10",
+    "type": "Social",
+    "registered": 30
+  },
+  {
+    "id": 4,
+    "event_name": "Gardening Club",
+    "location": "Oakleigh",
+    "date": "2025-09-12",
+    "type": "Hobby",
+    "registered": 18
+  },
+  {
+    "id": 5,
+    "event_name": "Online Safety Seminar",
+    "location": "Online",
+    "date": "2025-09-18",
+    "type": "Digital Skills",
+    "registered": 45
+  },
+  {
+    "id": 6,
+    "event_name": "Book Club Meeting",
+    "location": "Clayton",
+    "date": "2025-09-20",
+    "type": "Social",
+    "registered": 12
+  },
+  {
+    "id": 7,
+    "event_name": "Healthy Cooking Class",
+    "location": "Caulfield",
+    "date": "2025-09-25",
+    "type": "Health",
+    "registered": 20
+  },
+  {
+    "id": 8,
+    "event_name": "Yoga for Seniors",
+    "location": "Glen Waverley",
+    "date": "2025-09-28",
+    "type": "Health",
+    "registered": 25
+  },
+  {
+    "id": 9,
+    "event_name": "Painting Workshop",
+    "location": "Oakleigh",
+    "date": "2025-10-02",
+    "type": "Hobby",
+    "registered": 16
+  },
+  {
+    "id": 10,
+    "event_name": "Financial Planning Talk",
+    "location": "Online",
+    "date": "2025-10-08",
+    "type": "Workshop",
+    "registered": 50
+  },
+  {
+    "id": 11,
+    "event_name": "First Aid for Carers",
+    "location": "Clayton",
+    "date": "2025-10-15",
+    "type": "Workshop",
+    "registered": 28
+  }
+]

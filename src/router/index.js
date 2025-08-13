@@ -37,8 +37,14 @@ const routes = [
    path: '/sendemail',
    name: 'SendEmail',
    component: () => import('../views/SendEmailView.vue'),
-   meta: { requiresAuth: true, role: 'admin' }
- }
+   meta: { requiresAuth: true, role: 'admin' },
+  },
+  {
+    path: '/admin/data',
+    name: 'InteractiveData',
+    component: () => import('../views/InteractiveDataView.vue'),
+    meta: { requiresAuth: true, role: 'admin' } // 仅限管理员访问
+  }
 ]
 
 const router = createRouter({
