@@ -1,3 +1,4 @@
+<!-- RegisterView.vue -->
 <template>
   <div class="container py-4">
     <div class="register-card mt-5 fixed-width">
@@ -7,7 +8,7 @@
           <label>{{ $t('username') }}</label>
           <input
             v-model="username"
-            type="text"
+            type="email"
             class="form-control"
             :placeholder="$t('username')"
             @blur="validateUsername"
@@ -53,6 +54,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../firebase'  // 路径根据你的项目实际修改
 
 const router = useRouter()
 const { t } = useI18n()
@@ -65,8 +68,8 @@ const success = ref('')
 const errors = ref({ username: '', password: '', confirmPassword: '' })
 
 const validateUsername = () => {
-  if (username.value.length < 3) {
-    errors.value.username = t('Username Too Short')
+  if (!username.value.includes('@') || username.value.length < 6) {
+    errors.value.username = t('Invalid email format')
   } else {
     errors.value.username = ''
   }
@@ -113,29 +116,18 @@ const register = async () => {
   validatePassword(true)
   validateConfirmPassword()
 
-  if (errors.value.username || errors.value.password || errors.value.confirmPassword) {
-    return
-  }
+  if (errors.value.username || errors.value.password || errors.value.confirmPassword) return
 
   try {
-    const res = await fetch('/data/users.json')
-    const fileUsers = res.ok ? await res.json() : []
-    const localUsers = JSON.parse(localStorage.getItem('users') || '[]')
-    const allUsers = [...fileUsers, ...localUsers]
-
-    const exists = allUsers.find(u => u.username === username.value)
-    if (exists) {
-      error.value = t('registerError')
-      return
-    }
-
-    const newUser = { username: username.value, password: password.value }
-    localStorage.setItem('users', JSON.stringify([...localUsers, newUser]))
-
+    await createUserWithEmailAndPassword(auth, username.value, password.value)
     success.value = t('registerSuccess')
-    setTimeout(() => router.push('/login'), 1200)
-  } catch {
-    error.value = t('registerException')
+    setTimeout(() => router.push('/login'), 1500)
+  } catch (e) {
+    if (e.code === 'auth/email-already-in-use') {
+      error.value = t('registerError')  // 已注册
+    } else {
+      error.value = t('registerException')  // 其他错误
+    }
   }
 }
 </script>

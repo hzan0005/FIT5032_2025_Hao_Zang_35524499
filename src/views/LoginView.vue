@@ -1,45 +1,43 @@
 <template>
-  <div class="wrapper">
-    <div class="login-container">
-      <div class="login-card">
-        <div class="form-title">Login</div>
+  <div class="container py-4">
+    <div class="d-flex justify-content-center align-items-center mt-3" style="min-height: 50vh;">
+      <div class="login-card w-100" style="max-width: 420px;">
+        <div class="text-center mb-4">
+          <h2 class="fw-bold">{{ $t('loginTitle') }}</h2>
+        </div>
 
         <form @submit.prevent="login">
-          <!-- Username -->
-          <div class="form-group">
-            <label>Username</label>
+          <div class="mb-3">
+            <label class="form-label">{{ $t('username') }}</label>
             <input
               v-model="username"
-              type="text"
-              class="form-input"
-              placeholder="Enter your username"
+              type="email"
+              class="form-control"
+              :placeholder="$t('username')"
               @blur="validateUsername(true)"
               @input="validateUsername(false)"
             />
-            <div v-if="errors.username" class="error-text">{{ errors.username }}</div>
+            <div v-if="errors.username" class="text-danger small mt-1">{{ errors.username }}</div>
           </div>
 
-          <!-- Password -->
-          <div class="form-group">
-            <label>Password</label>
+          <div class="mb-3">
+            <label class="form-label">{{ $t('password') }}</label>
             <input
               v-model="password"
               type="password"
-              class="form-input"
-              placeholder="Enter your password"
+              class="form-control"
+              :placeholder="$t('password')"
               @blur="() => validatePassword(true)"
               @input="() => validatePassword(false)"
             />
-            <div v-if="errors.password" class="error-text">
+            <div v-if="errors.password" class="text-danger small mt-1">
               <div v-for="(msg, i) in errors.password.split('. ')" :key="i">{{ msg.trim() }}.</div>
             </div>
           </div>
 
-          <!-- Login error -->
-          <div v-if="error" class="error-box">{{ error }}</div>
+          <div v-if="error" class="alert alert-danger py-2 text-center small">{{ error }}</div>
 
-          <!-- Submit -->
-          <button type="submit" class="submit-btn">Login</button>
+          <button type="submit" class="btn btn-dark w-100">{{ $t('loginBtn') }}</button>
         </form>
       </div>
     </div>
@@ -49,16 +47,20 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../firebase'  // 路径按你项目结构修改
 
 const username = ref('')
 const password = ref('')
 const error = ref('')
 const errors = ref({ username: null, password: null })
 const router = useRouter()
+const { t } = useI18n()
 
 const validateUsername = (blur) => {
-  if (username.value.trim().length < 3) {
-    if (blur) errors.value.username = 'Username must be at least 3 characters.'
+  if (!username.value.includes('@') || username.value.trim().length < 6) {
+    if (blur) errors.value.username = t('Invalid email format')
   } else {
     errors.value.username = null
   }
@@ -69,13 +71,25 @@ const validatePassword = (blur) => {
   const minLength = 8
   const errorList = []
 
-  if (pwd.length < minLength) errorList.push(`Password must be at least ${minLength} characters`)
-  if (!/[A-Z]/.test(pwd)) errorList.push('Must contain an uppercase letter')
-  if (!/[a-z]/.test(pwd)) errorList.push('Must contain a lowercase letter')
-  if (!/\d/.test(pwd)) errorList.push('Must contain a number')
-  if (!/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) errorList.push('Must contain a special character')
+  if (pwd.length < minLength) {
+    errorList.push(`Password must be at least ${minLength} characters long.`)
+  }
+  if (!/[A-Z]/.test(pwd)) {
+    errorList.push('Password must contain at least one uppercase letter.')
+  }
+  if (!/[a-z]/.test(pwd)) {
+    errorList.push('Password must contain at least one lowercase letter.')
+  }
+  if (!/\d/.test(pwd)) {
+    errorList.push('Password must contain at least one number.')
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(pwd)) {
+    errorList.push('Password must contain at least one special character.')
+  }
 
-  if (blur) errors.value.password = errorList.length > 0 ? errorList.join('. ') : ''
+  if (blur) {
+    errors.value.password = errorList.length > 0 ? errorList.join(' ') : ''
+  }
 }
 
 const login = async () => {
@@ -86,115 +100,51 @@ const login = async () => {
   if (errors.value.username || errors.value.password) return
 
   try {
-    let fileUsers = []
-    try {
-      const res = await fetch('/data/users.json')
-      if (res.ok) fileUsers = await res.json()
-    } catch (e) {}
+    const userCredential = await signInWithEmailAndPassword(auth, username.value, password.value)
+    const user = userCredential.user
 
-    const localUsers = JSON.parse(localStorage.getItem('users') || '[]')
-    const allUsers = [...fileUsers, ...localUsers]
+    // 你可以在这里自定义角色，例如管理员邮箱
+    const role = user.email === 'admin@monash.com' ? 'admin' : 'user'
 
-    const user = allUsers.find(
-      (u) => u.username === username.value && u.password === password.value
-    )
+    localStorage.setItem('currentUser', JSON.stringify({
+      email: user.email,
+      uid: user.uid,
+      role
+    }))
 
-    if (!user) {
-      error.value = 'Invalid username or password.'
-      return
-    }
+  
+     window.dispatchEvent(new Event('update-user'))
 
-    localStorage.setItem('loggedInUser', user.username)
-    localStorage.setItem('currentUser', JSON.stringify(user))
-    window.dispatchEvent(new Event('storage'))
+    router.push(role === 'admin' ? '/admin' : '/')
 
-    if (user.role === 'admin') {
+    // 登录成功后跳转
+    if (role === 'admin') {
       router.push('/admin')
     } else {
       router.push('/')
     }
-  } catch (e) {
-    error.value = 'Login failed due to a system error.'
+  } catch (err) {
+    if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+      error.value = t('loginError')
+    } else {
+      error.value = t('loginException')
+    }
   }
 }
 </script>
 
 <style scoped>
-.wrapper {
-  padding: 3rem 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-}
-
-.login-container {
-  width: 100%;
-  max-width: 420px;
-}
-
 .login-card {
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  padding: 2rem;
+  padding: 2rem 2rem 1.5rem 2rem;
 }
 
-.form-title {
-  text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-}
-
-.form-group {
-  margin-bottom: 1.2rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-.form-input {
+.fixed-width {
   width: 100%;
-  padding: 0.6rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.error-text {
-  margin-top: 0.4rem;
-  color: #c0392b;
-  font-size: 0.9rem;
-}
-
-.error-box {
-  background-color: #ffe6e6;
-  color: #c0392b;
-  padding: 0.5rem;
-  text-align: center;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-}
-
-.submit-btn {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: #2a6fa1;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.submit-btn:hover {
-  background-color: #1e5c87;
+  margin: 0 auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 </style>

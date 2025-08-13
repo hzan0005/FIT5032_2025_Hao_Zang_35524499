@@ -1,19 +1,32 @@
 <template>
   <nav class="navbar navbar-expand-xl navbar-light bg-white border-bottom">
-    <div class="container d-flex align-items-center justify-content-between">
+    <div class="container-fixed d-flex align-items-center justify-content-between">
       <!-- Logo -->
       <router-link class="navbar-brand fw-bold me-3" to="/">
         Healthy Seniors
       </router-link>
 
-      <!-- Login / Register / Logout buttons -->
-      <div class="d-flex gap-2 order-xl-3 ms-auto">
-        <router-link v-if="!isAuthenticated" class="btn btn-outline-dark btn-sm" to="/login">{{ $t('loginBtn') }}</router-link>
-        <router-link v-if="!isAuthenticated" class="btn btn-dark btn-sm" to="/register">{{ $t('registerBtn') }}</router-link>
-        <button v-else class="btn btn-outline-danger btn-sm" @click="handleLogout">{{ $t('logout') || 'Logout' }}</button>
+      <!-- Right-side buttons -->
+      <div class="d-flex align-items-center gap-3 order-xl-3 ms-auto">
+        <!-- User Info -->
+        <div v-if="currentUser.loggedIn" class="text-end small text-muted me-2 text-nowrap fw-bold">
+          <div>{{ currentUser.email }}</div>
+          <div>{{ currentUser.role }}</div>
+        </div>
+
+        <!-- Login / Register / Logout -->
+        <router-link v-if="!currentUser.loggedIn" class="btn btn-outline-dark btn-sm" to="/login">
+          Login
+        </router-link>
+        <router-link v-if="!currentUser.loggedIn" class="btn btn-dark btn-sm" to="/register">
+          Register
+        </router-link>
+        <button v-else class="btn btn-outline-danger btn-sm" @click="handleLogout">
+          Logout
+        </button>
       </div>
 
-      <!-- Collapse button -->
+      <!-- Collapse toggle button -->
       <button
         class="navbar-toggler order-xl-2 ms-2"
         type="button"
@@ -26,49 +39,45 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Collapsible menu -->
-      <div class="collapse navbar-collapse order-xl-1" id="navbarSupportedContent">
+      <!-- Collapsible Menu -->
+      <div
+        :class="['collapse', 'navbar-collapse', 'order-xl-1', { show: !isAdmin }]"
+        id="navbarSupportedContent"
+      >
         <ul class="navbar-nav me-auto mb-2 mb-xl-0">
-          <li class="nav-item"><router-link class="nav-link" to="/">{{ $t('nav.home') }}</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/about">{{ $t('nav.about') }}</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/health">{{ $t('nav.health') }}</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/community">{{ $t('nav.community') }}</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/skills">{{ $t('nav.skills') }}</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/caregiver">{{ $t('nav.caregiver') }}</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/help">{{ $t('nav.help') }}</router-link></li>
-          <li class="nav-item"><router-link class="nav-link" to="/donate">{{ $t('nav.donate') }}</router-link></li>
-          <li class="nav-item" v-if="currentUser?.role === 'admin'">
-            <router-link class="nav-link" to="/admin">{{ $t('nav.admin') || 'Admin Dashboard' }}</router-link>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/">Home</router-link>
+          </li>
+
+          <!-- 折叠菜单：只有非管理员才默认显示 -->
+          <template v-if="!isAdmin">
+            <li class="nav-item"><router-link class="nav-link" to="/about">About Us</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/health">Health Information</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/community">Community Programs</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/skills">Skills Development</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/caregiver">Caregiver Support</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/help">Help Center</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/donate">Donate Us</router-link></li>
+          </template>
+
+          <!-- 管理员菜单 -->
+          <li class="nav-item" v-if="currentUser.role === 'admin'">
+            <router-link class="nav-link" to="/admin">Admin Dashboard</router-link>
+          </li>
+          <li class="nav-item" v-if="currentUser.role === 'admin'">
+            <router-link class="nav-link" to="/rating">Rating Dashboard</router-link>
+          </li>
+          <li class="nav-item" v-if="currentUser.role === 'admin'">
+            <router-link class="nav-link" to="/sendemail">Send Email</router-link>
           </li>
         </ul>
       </div>
     </div>
   </nav>
-
-  <!-- Divider -->
-  <hr class="m-0" />
-
-  <!-- Accessibility settings bar -->
-  <div class="bg-white py-2 border-bottom">
-    <div class="container d-flex justify-content-center flex-wrap gap-2 text-center">
-      <button class="btn btn-outline-dark btn-sm" @click="increaseFont">A+</button>
-      <button class="btn btn-outline-dark btn-sm" @click="decreaseFont">A-</button>
-      <button class="btn btn-outline-dark btn-sm" @click="resetFont">Reset</button>
-      <button class="btn btn-outline-secondary btn-sm">{{ $t('btnScreenReader') }}</button>
-      <div class="d-flex align-items-center gap-1 ps-2">
-        <a href="#" class="text-dark small" @click.prevent="switchLanguage('en')">EN</a>
-        <span>|</span>
-        <a href="#" class="text-dark small" @click.prevent="switchLanguage('zh')">中文</a>
-        <span>|</span>
-        <a href="#" class="text-dark small" @click.prevent="switchLanguage('ur')">Urdu</a>
-      </div>
-    </div>
-  </div>
 </template>
 
-
 <script setup>
-import { ref, watchEffect, onMounted } from 'vue'
+import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
@@ -77,31 +86,54 @@ const increaseFont = () => { if (fontSize.value < 150) fontSize.value += 10 }
 const decreaseFont = () => { if (fontSize.value > 80) fontSize.value -= 10 }
 const resetFont = () => { fontSize.value = 100 }
 
-watchEffect(() => {
-  document.body.style.fontSize = `${fontSize.value}%`
-})
-
 const { locale } = useI18n()
 const switchLanguage = (lang) => {
   locale.value = lang
 }
 
 const router = useRouter()
-const isAuthenticated = ref(false)
-const currentUser = ref(null)
+
+const currentUser = reactive({
+  email: '',
+  uid: '',
+  role: '',
+  loggedIn: false
+})
 
 const updateUserState = () => {
   const userData = localStorage.getItem('currentUser')
-  currentUser.value = userData ? JSON.parse(userData) : null
-  isAuthenticated.value = !!userData
+  const user = userData ? JSON.parse(userData) : null
+
+  if (user) {
+    currentUser.email = user.email
+    currentUser.uid = user.uid
+    currentUser.role = user.role
+    currentUser.loggedIn = true
+  } else {
+    currentUser.email = ''
+    currentUser.uid = ''
+    currentUser.role = ''
+    currentUser.loggedIn = false
+  }
 }
 
-onMounted(updateUserState)
-window.addEventListener('storage', updateUserState)
+const isAdmin = computed(() => currentUser.loggedIn && currentUser.role === 'admin')
+
+onMounted(() => {
+  updateUserState()
+  window.addEventListener('storage', updateUserState)
+  window.addEventListener('update-user', updateUserState)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('storage', updateUserState)
+  window.removeEventListener('update-user', updateUserState)
+})
 
 const handleLogout = () => {
   localStorage.removeItem('currentUser')
   updateUserState()
+  window.dispatchEvent(new Event('update-user'))
   router.push('/login')
 }
 </script>
