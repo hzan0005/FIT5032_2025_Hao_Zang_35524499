@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from '../firebase'  // 根据实际路径修改
+import { getAuth, onAuthStateChanged } from 'firebase/auth'
 
-// 页面导入
+// Page Imports
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import HealthView from '../views/HealthView.vue'
@@ -14,7 +13,8 @@ import DonateView from '../views/DonateView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RatingView from '../views/RatingView.vue'
-import SendEmailView from '../views/SendEmailView.vue'
+import MapView from '../views/MapView.vue';
+
 const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/about', name: 'about', component: AboutView, meta: { requiresAuth: true } },
@@ -24,10 +24,17 @@ const routes = [
   { path: '/caregiver', name: 'caregiver', component: CaregiverView, meta: { requiresAuth: true } },
   { path: '/help', name: 'help', component: HelpView, meta: { requiresAuth: true } },
   { path: '/donate', name: 'donate', component: DonateView, meta: { requiresAuth: true } },
+  { path: '/map', name: 'MapView', component: MapView, meta: { requiresAuth: true } },
   {
     path: '/admin',
     name: 'admin',
     component: () => import('../views/AdminView.vue'),
+    meta: { requiresAuth: true, role: 'admin' }
+  },
+  {
+    path: '/admin/data',
+    name: 'InteractiveData',
+    component: () => import('../views/InteractiveDataView.vue'),
     meta: { requiresAuth: true, role: 'admin' }
   },
   { path: '/login', name: 'login', component: LoginView },
@@ -37,14 +44,8 @@ const routes = [
    path: '/sendemail',
    name: 'SendEmail',
    component: () => import('../views/SendEmailView.vue'),
-   meta: { requiresAuth: true, role: 'admin' },
-  },
-  {
-    path: '/admin/data',
-    name: 'InteractiveData',
-    component: () => import('../views/InteractiveDataView.vue'),
-    meta: { requiresAuth: true, role: 'admin' } // 仅限管理员访问
-  }
+   meta: { requiresAuth: true, role: 'admin' }
+ }
 ]
 
 const router = createRouter({
@@ -52,46 +53,47 @@ const router = createRouter({
   routes
 })
 
-// 路由守卫：基于 Firebase 登录状态判断访问权限
-let isAuthChecked = false
+// A function to get the current user's auth state reliably
+const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const removeListener = onAuthStateChanged(
+      getAuth(),
+      (user) => {
+        removeListener();
+        resolve(user);
+      },
+      reject
+    )
+  })
+}
 
+// Global navigation guard
 router.beforeEach(async (to, from, next) => {
-  if (!isAuthChecked) {
-    await new Promise(resolve => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const role = user.email === 'admin@monash.com' ? 'admin' : 'user'
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-          localStorage.setItem('currentUser', JSON.stringify({
-            email: user.email,
-            uid: user.uid,
-            role
-          }))
-        } else {
-          localStorage.removeItem('currentUser')
-        }
+  if (requiresAuth) {
+    const user = await getCurrentUser();
+    if (user) {
+      // User is logged in
+      const userRole = user.email === 'admin@monash.com' ? 'admin' : 'user';
+      const requiredRole = to.meta.role;
 
-        unsubscribe()
-        isAuthChecked = true
-        resolve()
-      })
-    })
-  }
-
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'))
-
-  if (to.meta.requiresAuth) {
-    if (!currentUser) {
-      next('/login')
-    } else if (to.meta.role && currentUser.role !== to.meta.role) {
-      alert('Access denied: insufficient permissions')
-      next('/')
+      if (requiredRole && userRole !== requiredRole) {
+        // Role does not match, redirect to home
+        alert('Access Denied: You do not have permission to view this page.');
+        next('/');
+      } else {
+        // Authentication and authorization successful
+        next();
+      }
     } else {
-      next()
+      // User is not logged in, redirect to login page
+      next('/login');
     }
   } else {
-    next()
+    // Page does not require authentication
+    next();
   }
-})
+});
 
 export default router

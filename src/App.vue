@@ -1,19 +1,16 @@
-<!-- App.vue -->
 <template>
   <div id="app" class="d-flex flex-column min-vh-100">
-    <!-- Global Navbar -->
-    <Navbar />
+    <header>
+      <Navbar />
+    </header>
 
-    <!-- Main page content: always centered and fixed width -->
     <main class="flex-grow-1">
       <div class="page-container py-4">
         <router-view />
       </div>
     </main>
 
-    <!-- Global Footer -->
     <Footer />
-    <!-- Floating Rating Component -->
     <FloatingRating />
   </div>
 </template>

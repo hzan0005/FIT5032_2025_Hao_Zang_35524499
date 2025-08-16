@@ -1,28 +1,31 @@
-<!-- RegisterView.vue -->
 <template>
   <div class="container py-4">
     <div class="register-card mt-5 fixed-width">
-      <h2 class="text-center mb-4 fw-bold">{{ $t('registerTitle') }}</h2>
+      <h2 class="text-center mb-4 fw-bold">Register</h2>
       <form @submit.prevent="register">
         <div class="mb-3">
-          <label>{{ $t('username') }}</label>
+          <label for="register-email" class="form-label">Email</label>
           <input
+            id="register-email"
             v-model="username"
             type="email"
             class="form-control"
-            :placeholder="$t('username')"
+            autocomplete="email"
+            required
             @blur="validateUsername"
           />
           <div v-if="errors.username" class="text-danger small mt-1">{{ errors.username }}</div>
         </div>
 
         <div class="mb-3">
-          <label>{{ $t('password') }}</label>
+          <label for="register-password" class="form-label">Password</label>
           <input
+            id="register-password"
             v-model="password"
             type="password"
             class="form-control"
-            :placeholder="$t('password')"
+            autocomplete="new-password"
+            required
             @blur="() => validatePassword(true)"
             @input="() => validatePassword(false)"
           />
@@ -30,21 +33,23 @@
         </div>
 
         <div class="mb-3">
-          <label>{{ $t('confirmPassword') }}</label>
+          <label for="register-confirm-password" class="form-label">Confirm Password</label>
           <input
+            id="register-confirm-password"
             v-model="confirmPassword"
             type="password"
             class="form-control"
-            :placeholder="$t('confirmPassword')"
+            autocomplete="new-password"
+            required
             @blur="validateConfirmPassword"
           />
           <div v-if="errors.confirmPassword" class="text-danger small mt-1">{{ errors.confirmPassword }}</div>
         </div>
 
-        <div v-if="error" class="text-danger small mb-2">{{ error }}</div>
-        <div v-if="success" class="text-success small mb-2">{{ success }}</div>
+        <div v-if="error" class="text-danger small mb-2" role="alert">{{ error }}</div>
+        <div v-if="success" class="text-success small mb-2" role="alert">{{ success }}</div>
 
-        <button type="submit" class="btn btn-dark w-100">{{ $t('registerBtn') }}</button>
+        <button type="submit" class="btn btn-dark w-100">Register</button>
       </form>
     </div>
   </div>
@@ -53,12 +58,10 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { createUserWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase'  // 路径根据你的项目实际修改
+import { auth } from '../firebase'
 
 const router = useRouter()
-const { t } = useI18n()
 
 const username = ref('')
 const password = ref('')
@@ -69,7 +72,7 @@ const errors = ref({ username: '', password: '', confirmPassword: '' })
 
 const validateUsername = () => {
   if (!username.value.includes('@') || username.value.length < 6) {
-    errors.value.username = t('Invalid email format')
+    errors.value.username = 'Invalid email format'
   } else {
     errors.value.username = ''
   }
@@ -103,7 +106,7 @@ const validatePassword = (blur) => {
 
 const validateConfirmPassword = () => {
   if (confirmPassword.value !== password.value) {
-    errors.value.confirmPassword = t('Passwords do not match')
+    errors.value.confirmPassword = 'Passwords do not match'
   } else {
     errors.value.confirmPassword = ''
   }
@@ -120,13 +123,13 @@ const register = async () => {
 
   try {
     await createUserWithEmailAndPassword(auth, username.value, password.value)
-    success.value = t('registerSuccess')
+    success.value = 'Registration successful. Please log in.'
     setTimeout(() => router.push('/login'), 1500)
   } catch (e) {
     if (e.code === 'auth/email-already-in-use') {
-      error.value = t('registerError')  // 已注册
+      error.value = 'Email already in use.'
     } else {
-      error.value = t('registerException')  // 其他错误
+      error.value = 'Registration error, please try again later.'
     }
   }
 }

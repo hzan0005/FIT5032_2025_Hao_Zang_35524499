@@ -3,17 +3,19 @@
     <div class="d-flex justify-content-center align-items-center mt-3" style="min-height: 50vh;">
       <div class="login-card w-100" style="max-width: 420px;">
         <div class="text-center mb-4">
-          <h2 class="fw-bold">{{ $t('loginTitle') }}</h2>
+          <h2 class="fw-bold">Login</h2>
         </div>
 
         <form @submit.prevent="login">
           <div class="mb-3">
-            <label class="form-label">{{ $t('username') }}</label>
+            <label for="login-email" class="form-label">Email</label>
             <input
+              id="login-email"
               v-model="username"
               type="email"
               class="form-control"
-              :placeholder="$t('username')"
+              autocomplete="username"
+              required
               @blur="validateUsername(true)"
               @input="validateUsername(false)"
             />
@@ -21,12 +23,14 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label">{{ $t('password') }}</label>
+            <label for="login-password" class="form-label">Password</label>
             <input
+              id="login-password"
               v-model="password"
               type="password"
               class="form-control"
-              :placeholder="$t('password')"
+              autocomplete="current-password"
+              required
               @blur="() => validatePassword(true)"
               @input="() => validatePassword(false)"
             />
@@ -35,9 +39,9 @@
             </div>
           </div>
 
-          <div v-if="error" class="alert alert-danger py-2 text-center small">{{ error }}</div>
+          <div v-if="error" class="alert alert-danger py-2 text-center small" role="alert">{{ error }}</div>
 
-          <button type="submit" class="btn btn-dark w-100">{{ $t('loginBtn') }}</button>
+          <button type="submit" class="btn btn-dark w-100">Login</button>
         </form>
       </div>
     </div>
@@ -47,20 +51,18 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase'  // 路径按你项目结构修改
+import { auth } from '../firebase'
 
 const username = ref('')
 const password = ref('')
 const error = ref('')
 const errors = ref({ username: null, password: null })
 const router = useRouter()
-const { t } = useI18n()
 
 const validateUsername = (blur) => {
   if (!username.value.includes('@') || username.value.trim().length < 6) {
-    if (blur) errors.value.username = t('Invalid email format')
+    if (blur) errors.value.username = 'Invalid email format'
   } else {
     errors.value.username = null
   }
@@ -103,7 +105,6 @@ const login = async () => {
     const userCredential = await signInWithEmailAndPassword(auth, username.value, password.value)
     const user = userCredential.user
 
-    // 你可以在这里自定义角色，例如管理员邮箱
     const role = user.email === 'admin@monash.com' ? 'admin' : 'user'
 
     localStorage.setItem('currentUser', JSON.stringify({
@@ -112,28 +113,22 @@ const login = async () => {
       role
     }))
 
-  
-     window.dispatchEvent(new Event('update-user'))
+    window.dispatchEvent(new Event('update-user'))
 
     router.push(role === 'admin' ? '/admin' : '/')
 
-    // 登录成功后跳转
-    if (role === 'admin') {
-      router.push('/admin')
-    } else {
-      router.push('/')
-    }
   } catch (err) {
     if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-      error.value = t('loginError')
+      error.value = 'Invalid username or password'
     } else {
-      error.value = t('loginException')
+      error.value = 'Login error, please try again later'
     }
   }
 }
 </script>
 
 <style scoped>
+/* Your existing styles */
 .login-card {
   background: #fff;
   border-radius: 12px;

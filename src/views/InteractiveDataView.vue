@@ -4,7 +4,7 @@
 
     <section class="mb-5">
       <h3 class="mb-3">📅 Community Events</h3>
-      <div class="table-responsive">
+      <div class="table-responsive p-3 bg-white rounded shadow-sm">
         <table id="eventsTable" class="table table-striped table-bordered" style="width:100%">
           <thead>
             <tr>
@@ -16,8 +16,7 @@
               <th>Registered</th>
             </tr>
           </thead>
-          <tbody>
-            </tbody>
+          <tbody></tbody>
            <tfoot>
             <tr>
               <th></th>
@@ -34,7 +33,7 @@
 
     <section class="mb-5">
       <h3 class="mb-3">🤝 Volunteers List</h3>
-      <div class="table-responsive">
+      <div class="table-responsive p-3 bg-white rounded shadow-sm">
         <table id="volunteersTable" class="table table-striped table-bordered" style="width:100%">
           <thead>
             <tr>
@@ -45,8 +44,7 @@
               <th>Join Date</th>
             </tr>
           </thead>
-          <tbody>
-            </tbody>
+          <tbody></tbody>
           <tfoot>
             <tr>
               <th></th>
@@ -62,7 +60,7 @@
 
     <section>
       <h3 class="mb-3">💻 Digital Skills Hub</h3>
-      <div class="table-responsive">
+      <div class="table-responsive p-3 bg-white rounded shadow-sm">
         <table id="digitalSkillsTable" class="table table-striped table-bordered" style="width:100%">
           <thead>
             <tr>
@@ -74,8 +72,7 @@
               <th>Spots Available</th>
             </tr>
           </thead>
-          <tbody>
-            </tbody>
+          <tbody></tbody>
           <tfoot>
             <tr>
               <th></th>
@@ -94,136 +91,97 @@
 
 <script setup>
 import { onMounted, onBeforeUnmount } from 'vue';
-
-// 导入 JQuery 和 DataTables
 import $ from 'jquery';
-import 'datatables.net-bs5';
+import DataTable from 'datatables.net-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
+import 'datatables.net-buttons-bs5';
+import 'datatables.net-buttons-bs5/css/buttons.bootstrap5.min.css';
+import 'datatables.net-buttons/js/buttons.html5.mjs';
+import JSZip from 'jszip';
+
+DataTable.Buttons.jszip(JSZip);
 
 let tables = {};
 
-onMounted(async () => {
-  // 确保旧的表格实例在重新创建前被销毁
-  if (tables.eventsTable) tables.eventsTable.destroy();
-  if (tables.volunteersTable) tables.volunteersTable.destroy();
-  if (tables.digitalSkillsTable) tables.digitalSkillsTable.destroy();
+// --- 通用的 DataTables 初始化函数 ---
+// ***** 关键修改 1: 增加一个新参数 `exportFileName` *****
+function initializeDataTable(selector, ajaxUrl, columns, searchableColumns, exportFileName) {
+  const table = $(selector).DataTable({
+    destroy: true,
+    ajax: { url: ajaxUrl, dataSrc: '' },
+    columns: columns,
+    pageLength: 10,
+    responsive: true,
+    dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
+         "<'row'<'col-sm-12'tr>>" +
+         "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>" +
+         "<'row'<'col-sm-12 mt-3'B>>",
+    buttons: [
+      {
+        extend: 'csv',
+        text: 'Export to CSV',
+        className: 'btn btn-primary',
+        // ***** 关键修改 2: 使用传入的参数作为文件名 *****
+        filename: exportFileName
+      }
+    ],
+    initComplete: function () {
+      this.api().columns(searchableColumns).every(function () {
+        let column = this;
+        let title = $(column.footer()).text();
+        if (title) {
+          $('<input type="text" class="form-control form-control-sm" placeholder="Search ' + title + '" />')
+            .appendTo($(column.footer()).empty())
+            .on('keyup change clear', function () {
+              if (column.search() !== this.value) {
+                column.search(this.value).draw();
+              }
+            });
+        }
+      });
+    },
+  });
+  return table;
+}
 
-  // --- 初始化社区活动表格 ---
-  const eventsResponse = await fetch('/data/community_events.json');
-  const eventsData = await eventsResponse.json();
+onMounted(() => {
+  // ***** 关键修改 3: 在调用函数时传入文件名 *****
+  tables.eventsTable = initializeDataTable(
+    '#eventsTable',
+    '/data/community_events.json',
+    [{ data: 'id' }, { data: 'event_name' }, { data: 'location' }, { data: 'date' }, { data: 'type' }, { data: 'registered' }],
+    [1, 2, 4],
+    'Community_Events_Export' // <-- 文件名
+  );
+
+  tables.volunteersTable = initializeDataTable(
+    '#volunteersTable',
+    '/data/volunteers.json',
+    [{ data: 'id' }, { data: 'name' }, { data: 'email' }, { data: 'role' }, { data: 'join_date' }],
+    [1, 2, 3],
+    'Volunteers_List_Export' // <-- 文件名
+  );
   
-  tables.eventsTable = $('#eventsTable').DataTable({
-    data: eventsData,
-    columns: [
-      { data: 'id' },
-      { data: 'event_name' },
-      { data: 'location' },
-      { data: 'date' },
-      { data: 'type' },
-      { data: 'registered' }
-    ],
-    pageLength: 10,
-    responsive: true,
-    initComplete: function () {
-      this.api()
-        .columns([1, 2, 4])
-        .every(function () {
-          let column = this;
-          let title = $(column.footer()).text();
-          if(title) {
-            $('<input type="text" class="form-control form-control-sm" placeholder="Search ' + title + '" />')
-              .appendTo($(column.footer()).empty())
-              .on('keyup change clear', function () {
-                if (column.search() !== this.value) {
-                  column.search(this.value).draw();
-                }
-              });
-          }
-        });
-    },
-  });
-
-  // --- 初始化志愿者表格 ---
-  const volunteersResponse = await fetch('/data/volunteers.json');
-  const volunteersData = await volunteersResponse.json();
-
-  tables.volunteersTable = $('#volunteersTable').DataTable({
-    data: volunteersData,
-    columns: [
-      { data: 'id' },
-      { data: 'name' },
-      { data: 'email' },
-      { data: 'role' },
-      { data: 'join_date' }
-    ],
-    pageLength: 10,
-    responsive: true,
-    initComplete: function () {
-      this.api()
-        .columns([1, 2, 3])
-        .every(function () {
-          let column = this;
-          let title = $(column.footer()).text();
-          if(title) {
-            $('<input type="text" class="form-control form-control-sm" placeholder="Search ' + title + '" />')
-              .appendTo($(column.footer()).empty())
-              .on('keyup change clear', function () {
-                if (column.search() !== this.value) {
-                  column.search(this.value).draw();
-                }
-              });
-          }
-        });
-    },
-  });
-
-  // --- 初始化数字技能表格 (新增) ---
-  const digitalSkillsResponse = await fetch('/data/digital_skills.json');
-  const digitalSkillsData = await digitalSkillsResponse.json();
-
-  tables.digitalSkillsTable = $('#digitalSkillsTable').DataTable({
-    data: digitalSkillsData,
-    columns: [
-      { data: 'id' },
-      { data: 'workshop_name' },
-      { data: 'skill_level' },
-      { data: 'instructor' },
-      { data: 'date' },
-      { data: 'spots_available' }
-    ],
-    pageLength: 10,
-    responsive: true,
-    initComplete: function () {
-      this.api()
-        .columns([1, 2, 3])
-        .every(function () {
-          let column = this;
-          let title = $(column.footer()).text();
-          if(title) {
-            $('<input type="text" class="form-control form-control-sm" placeholder="Search ' + title + '" />')
-              .appendTo($(column.footer()).empty())
-              .on('keyup change clear', function () {
-                if (column.search() !== this.value) {
-                  column.search(this.value).draw();
-                }
-              });
-          }
-        });
-    },
-  });
+  tables.digitalSkillsTable = initializeDataTable(
+    '#digitalSkillsTable',
+    '/data/digital_skills.json',
+    [{ data: 'id' }, { data: 'workshop_name' }, { data: 'skill_level' }, { data: 'instructor' }, { data: 'date' }, { data: 'spots_available' }],
+    [1, 2, 3],
+    'Digital_Skills_Hub_Export' // <-- 文件名
+  );
 });
 
 onBeforeUnmount(() => {
-  if (tables.eventsTable) tables.eventsTable.destroy();
-  if (tables.volunteersTable) tables.volunteersTable.destroy();
-  if (tables.digitalSkillsTable) tables.digitalSkillsTable.destroy();
+  Object.values(tables).forEach(table => {
+    if (table) table.destroy();
+  });
 });
 </script>
 
 <style>
 tfoot input {
-    width: 100%;
-    padding: 3px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 3px;
+  box-sizing: border-box;
 }
 </style>

@@ -4,21 +4,21 @@
       <div class="row">
         <div class="col-md-4">
           <strong>Healthy Seniors</strong><br />
-          <small>{{ $t('update1') }}</small>
+          <small>New walking group launched in Victoria!</small>
         </div>
         <div class="col-md-4">
-          <strong>{{ $t('explore') }}</strong><br />
+          <strong>Explore</strong><br />
           <small>
-            {{ $t('Health Info') }}<br />
-            {{ $t('Community Programs') }}<br />
-            {{ $t('Digital Skills') }}
+            Health Info<br />
+            Community Programs<br />
+            Digital Skills
           </small>
         </div>
         <div class="col-md-4">
-          <strong>{{ $t('support') }}</strong><br />
+          <strong>Support</strong><br />
           <small>
-            {{ $t('Caregiver Tools') }}<br />
-            {{ $t('Help Centre') }}<br />
+            Caregiver Tools<br />
+            Help Centre<br />
             Donate
           </small>
         </div>

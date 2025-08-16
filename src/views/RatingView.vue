@@ -1,84 +1,98 @@
 <template>
-  <div v-if="loading">
-    <p class="text-center mt-5">Loading...</p>
-  </div>
-
-  <div v-else-if="!currentUser">
-    <p class="text-danger text-center mt-5">Please log in to access the rating page.</p>
-  </div>
-
-  <div v-else class="container py-4 text-center">
-    <h1 class="fw-bold mb-4">Rate Our Website Sections</h1>
-
-    <div
-      v-for="section in sections"
-      :key="section"
-      class="border rounded p-3 mb-4 text-start"
-    >
-      <h4 class="text-center">{{ section }} Section</h4>
-
-      <!-- Star Rating -->
-      <div class="mb-2 text-center">
-        <button
-          v-for="n in 5"
-          :key="n"
-          class="btn btn-outline-warning me-1"
-          :class="{ 'btn-warning': userRatings[section]?.rating >= n }"
-          @click="updateRating(section, n)"
-          :disabled="hasRated(section)"
-        >
-          ★
-        </button>
-        <span class="ms-2 text-muted">
-          {{ userRatings[section]?.rating || 0 }} / 5
-        </span>
+  <div class="rating-page-container py-5">
+    <div class="container">
+      <div v-if="loading" class="text-center">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-3">Loading ratings...</p>
       </div>
 
-      <!-- Comment Input -->
-      <textarea
-        v-model="userRatings[section].comment"
-        class="form-control mb-2"
-        rows="2"
-        placeholder="Leave your comment"
-        :disabled="hasRated(section)"
-      ></textarea>
-
-      <!-- Submit Button -->
-      <div class="text-center">
-        <button
-          class="btn btn-primary"
-          @click="submitRating(section)"
-          :disabled="hasRated(section) || isSubmitting"
-        >
-          {{ hasRated(section) ? 'Rated' : (isSubmitting ? 'Submitting...' : 'Submit Rating') }}
-        </button>
+      <div v-else-if="!currentUser" class="text-center login-prompt-card">
+        <img src="/images/login-prompt-image.jpg" alt="A friendly reminder to log in" class="prompt-image mb-4">
+        <h2 class="fw-bold">Please Log In</h2>
+        <p class="text-muted fs-5">You need to be logged in to rate our sections and view comments.</p>
+        <router-link to="/login" class="btn btn-primary btn-lg mt-3">Go to Login</router-link>
       </div>
 
-      <!-- Show Average Rating and Comments -->
-      <div class="mt-3">
-        <p class="mb-1">
-          <strong>Average:</strong>
-          {{ averageRating(section).toFixed(1) }} ({{ allRatings[section]?.length || 0 }} ratings)
-        </p>
+      <div v-else>
+        <section class="text-center mb-5">
+            <img src="/images/rating-page-banner.jpg" alt="Colorful stars representing feedback and ratings" class="header-image mb-4">
+            <h1 class="display-5 fw-bold">Share Your Feedback</h1>
+            <p class="lead text-muted mt-3">Your feedback helps us improve. Please take a moment to rate our website sections.</p>
+        </section>
 
-        <ul class="list-group">
-          <li
-            v-for="(entry, idx) in showAll[section] ? allRatings[section] : allRatings[section].slice(0, 2)"
-            :key="idx"
-            class="list-group-item"
+        <div class="row row-cols-1 row-cols-md-2 justify-content-center g-4">
+          <div
+            v-for="section in sections"
+            :key="section"
+            class="col"
           >
-            <div><strong>★ {{ entry.rating }}</strong></div>
-            <div v-html="escapeHTML(entry.comment)"></div>
-            <div class="text-muted small mt-1">
-              — {{ entry.username }} • {{ formatDate(entry.timestamp) }}
-            </div>
-          </li>
-        </ul>
+            <div class="rating-card p-4 h-100">
+              <h3 class="text-center mb-3">{{ section }} Section</h3>
 
-        <div class="text-center mt-2" v-if="allRatings[section]?.length > 2">
-          <button class="btn btn-sm btn-outline-secondary" @click="toggleShow(section)">
-            {{ showAll[section] ? 'Hide Comments' : 'Show All Comments' }}
-          </button>
+              <div class="star-rating mb-3 text-center">
+                <button
+                  v-for="n in 5"
+                  :key="n"
+                  class="star-btn"
+                  :class="{ 'rated': userRatings[section]?.rating >= n }"
+                  @click="updateRating(section, n)"
+                  :disabled="hasRated(section)"
+                  :aria-label="`Rate ${n} out of 5 stars for ${section}`"
+                >★</button>
+              </div>
+
+              <div v-if="!hasRated(section)">
+                <label :for="`comment-${section}`" class="form-label visually-hidden">Comment for {{ section }}</label>
+                <textarea
+                  :id="`comment-${section}`"
+                  v-model="userRatings[section].comment"
+                  class="form-control mb-3"
+                  rows="3"
+                  placeholder="Tell us more about your experience..."
+                ></textarea>
+                <div class="text-center">
+                  <button
+                    class="btn btn-success"
+                    @click="submitRating(section)"
+                    :disabled="isSubmitting"
+                  >
+                    {{ isSubmitting ? 'Submitting...' : 'Submit Your Rating' }}
+                  </button>
+                </div>
+              </div>
+               <div v-else class="text-center text-success fw-bold p-3 bg-light rounded">
+                ✓ Thank you for rating this section!
+              </div>
+
+              <div v-if="allRatings[section]?.length > 0" class="mt-4">
+                <h5 class="text-muted">What others are saying... (Avg: {{ averageRating(section).toFixed(1) }})</h5>
+                <ul class="list-group list-group-flush mt-3">
+                  <li
+                    v-for="(entry, idx) in showAll[section] ? allRatings[section] : allRatings[section].slice(0, 2)"
+                    :key="idx"
+                    class="list-group-item px-0"
+                  >
+                    <div class="d-flex w-100 justify-content-between">
+                      <strong class="mb-1">
+                        <span :class="`text-rating-${entry.rating}`">{{ '★'.repeat(entry.rating) }}</span>
+                      </strong>
+                      <small class="text-muted">{{ formatDate(entry.timestamp) }}</small>
+                    </div>
+                    <p class="mb-1" v-html="escapeHTML(entry.comment)"></p>
+                    <small class="text-muted">— {{ entry.username }}</small>
+                  </li>
+                </ul>
+                <div class="text-center mt-3" v-if="allRatings[section]?.length > 2">
+                  <button class="btn btn-sm btn-outline-secondary" @click="toggleShow(section)">
+                    {{ showAll[section] ? 'Show Less' : 'Show All Comments' }}
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -116,7 +130,8 @@ onMounted(async () => {
     sections.forEach(section => {
       const fromJson = baseData[section] || []
       const fromLocal = localData[section] || []
-      const merged = [...fromJson, ...fromLocal]
+      const merged = [...fromJson, ...fromLocal].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
 
       allRatings.value[section] = merged
       userRatings.value[section] = { rating: 0, comment: '' }
@@ -130,12 +145,15 @@ onMounted(async () => {
 })
 
 const hasRated = (section) => {
+  // ***** FIX 1: Check for currentUser.email instead of username *****
+  if (!currentUser.value?.email) return true;
   const record = JSON.parse(localStorage.getItem('ratedUsers') || '{}')
-  const userRecord = record?.[currentUser.value.username]
+  // ***** FIX 2: Use email as the key to check records *****
+  const userRecord = record?.[currentUser.value.email]
   if (Array.isArray(userRecord)) {
     return userRecord.includes(section)
   }
-  return !!userRecord
+  return false
 }
 
 const updateRating = (section, value) => {
@@ -170,13 +188,14 @@ const submitRating = (section) => {
   }
 
   const newEntry = {
-    username: currentUser.value.username,
+    // ***** FIX 3: Save the email as the username in the rating entry *****
+    username: currentUser.value.email,
     rating,
     comment: comment.trim(),
     timestamp: new Date().toISOString()
   }
 
-  allRatings.value[section].push(newEntry)
+  allRatings.value[section].unshift(newEntry)
 
   const localData = JSON.parse(localStorage.getItem('localRatings') || '{}')
   if (!localData[section]) localData[section] = []
@@ -184,13 +203,13 @@ const submitRating = (section) => {
   localStorage.setItem('localRatings', JSON.stringify(localData))
 
   const ratedUsers = JSON.parse(localStorage.getItem('ratedUsers') || '{}')
-  if (!ratedUsers[currentUser.value.username]) {
-    ratedUsers[currentUser.value.username] = []
+  // ***** FIX 4: Use email as the key to store rated sections *****
+  if (!ratedUsers[currentUser.value.email]) {
+    ratedUsers[currentUser.value.email] = []
   }
-  ratedUsers[currentUser.value.username].push(section)
+  ratedUsers[currentUser.value.email].push(section)
   localStorage.setItem('ratedUsers', JSON.stringify(ratedUsers))
 
-  alert(`Thanks for rating the ${section} section!`)
   setTimeout(() => {
     isSubmitting.value = false
   }, 1000)
@@ -201,8 +220,9 @@ const toggleShow = (section) => {
 }
 
 const formatDate = (timestamp) => {
-  const date = new Date(timestamp)
-  return date.toLocaleString()
+    if (!timestamp) return '';
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-AU', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 const escapeHTML = (str) => {
@@ -216,6 +236,68 @@ const escapeHTML = (str) => {
 </script>
 
 <style scoped>
+.rating-page-container {
+  background-color: #f8f9fa;
+}
+
+.header-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 6px solid #fff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.login-prompt-card {
+    background: #fff;
+    border-radius: 1rem;
+    padding: 3rem;
+    max-width: 600px;
+    margin: 2rem auto;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+}
+.prompt-image {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+.rating-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+}
+
+.star-rating .star-btn {
+  background: none;
+  border: none;
+  color: #d3d3d3;
+  font-size: 2.5rem;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  padding: 0 0.2rem;
+}
+
+.star-rating .star-btn:hover {
+  transform: scale(1.1);
+}
+
+.star-rating .star-btn.rated,
+.star-rating:hover .star-btn:hover,
+.star-rating .star-btn:hover ~ .star-btn {
+  color: #ffc107;
+}
+
+.star-rating:hover .star-btn {
+  color: #ffdd7a;
+}
+.text-rating-5 { color: #28a745; }
+.text-rating-4 { color: #8bc34a; }
+.text-rating-3 { color: #ffc107; }
+.text-rating-2 { color: #fd7e14; }
+.text-rating-1 { color: #dc3545; }
+
 textarea {
   resize: none;
 }
