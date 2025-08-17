@@ -14,7 +14,7 @@ import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RatingView from '../views/RatingView.vue'
 import MapView from '../views/MapView.vue';
-
+import BookingView from '../views/BookingView.vue'; // ★ 导入 BookingView
 const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/about', name: 'about', component: AboutView, meta: { requiresAuth: true } },
@@ -45,7 +45,13 @@ const routes = [
    name: 'SendEmail',
    component: () => import('../views/SendEmailView.vue'),
    meta: { requiresAuth: true, role: 'admin' }
- }
+  },
+  {
+    path: '/booking', // e.g., /booking/community/1
+    name: 'BookingView',
+    component: BookingView,
+    meta: { requiresAuth: true }
+  }
 ]
 
 const router = createRouter({

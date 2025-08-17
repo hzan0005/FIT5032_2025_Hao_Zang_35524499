@@ -35,7 +35,6 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import axios from 'axios';
 
-// ★★★ 把这里替换成你自己的 OpenRouteService API Key ★★★
 const apiKey = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6Ijk5OTBhMjI5NDY1NzQ2ZDA4OWEyZGVhYTliYzg5ZmVlIiwiaCI6Im11cm11cjY0In0=';
 
 let map = null;
@@ -48,13 +47,11 @@ let startMarker = null;
 let endMarker = null;
 
 onMounted(() => {
-  // --- 地图初始化 ---
-  map = L.map('map').setView([-37.8136, 144.9631], 13); // 默认中心点：墨尔本
+  map = L.map('map').setView([-37.8136, 144.9631], 13); 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }).addTo(map);
 
-  // 监听地图点击事件
   map.on('click', handleMapClick);
 });
 
@@ -64,7 +61,6 @@ onBeforeUnmount(() => {
   }
 });
 
-// --- 功能 1: 地点搜索 (Geocoding) ---
 const searchLocation = async () => {
   if (!searchQuery.value) return;
   try {
@@ -72,11 +68,11 @@ const searchLocation = async () => {
       params: {
         api_key: apiKey,
         text: searchQuery.value,
-        'boundary.country': 'AU' // 限制在澳大利亚境内搜索
+        'boundary.country': 'AU' 
       }
     });
     const coords = response.data.features[0].geometry.coordinates;
-    const latLng = [coords[1], coords[0]]; // 坐标顺序需要反转
+    const latLng = [coords[1], coords[0]]; 
     map.setView(latLng, 15);
     L.marker(latLng).addTo(map).bindPopup(`<b>${searchQuery.value}</b>`).openPopup();
   } catch (error) {
@@ -85,7 +81,6 @@ const searchLocation = async () => {
   }
 };
 
-// --- 功能 2: 路径规划 (Routing) ---
 const handleMapClick = (e) => {
   if (!startPoint.value) {
     startPoint.value = e.latlng;
@@ -117,8 +112,8 @@ const getRoute = async () => {
     const { distance, duration } = routeData.properties.summary;
 
     routeInfo.value = {
-      distance: (distance / 1000).toFixed(2), // 米转换为公里
-      duration: (duration / 60).toFixed(0) // 秒转换为分钟
+      distance: (distance / 1000).toFixed(2), 
+      duration: (duration / 60).toFixed(0) 
     };
 
     if (routeLayer) map.removeLayer(routeLayer);
@@ -144,7 +139,7 @@ const clearRoute = () => {
 .map-container {
   position: relative;
   width: 100%;
-  height: calc(100vh - 56px); /* 减去 Navbar 的大致高度 */
+  height: calc(100vh - 56px); 
 }
 #map {
   width: 100%;

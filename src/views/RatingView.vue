@@ -145,10 +145,8 @@ onMounted(async () => {
 })
 
 const hasRated = (section) => {
-  // ***** FIX 1: Check for currentUser.email instead of username *****
   if (!currentUser.value?.email) return true;
   const record = JSON.parse(localStorage.getItem('ratedUsers') || '{}')
-  // ***** FIX 2: Use email as the key to check records *****
   const userRecord = record?.[currentUser.value.email]
   if (Array.isArray(userRecord)) {
     return userRecord.includes(section)
@@ -188,7 +186,6 @@ const submitRating = (section) => {
   }
 
   const newEntry = {
-    // ***** FIX 3: Save the email as the username in the rating entry *****
     username: currentUser.value.email,
     rating,
     comment: comment.trim(),
@@ -203,7 +200,6 @@ const submitRating = (section) => {
   localStorage.setItem('localRatings', JSON.stringify(localData))
 
   const ratedUsers = JSON.parse(localStorage.getItem('ratedUsers') || '{}')
-  // ***** FIX 4: Use email as the key to store rated sections *****
   if (!ratedUsers[currentUser.value.email]) {
     ratedUsers[currentUser.value.email] = []
   }

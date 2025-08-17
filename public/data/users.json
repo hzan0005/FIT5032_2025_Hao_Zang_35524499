@@ -5,8 +5,98 @@
     "role": "admin"
   },
   {
-    "username": "user@example.com",
-    "password": "User@123",
+    "username": "admin2@monash.com",
+    "password": "ITadmin#2025",
+    "role": "admin"
+  },
+  {
+    "username": "admin3@monash.com",
+    "password": "Super#Admin1",
+    "role": "admin"
+  },
+  {
+    "username": "user1@monash.com",
+    "password": "User@101",
+    "role": "user"
+  },
+  {
+    "username": "user2@monash.com",
+    "password": "User@102",
+    "role": "user"
+  },
+  {
+    "username": "user3@monash.com",
+    "password": "User@103",
+    "role": "user"
+  },
+  {
+    "username": "user4@monash.com",
+    "password": "User@104",
+    "role": "user"
+  },
+  {
+    "username": "user5@monash.com",
+    "password": "User@105",
+    "role": "user"
+  },
+  {
+    "username": "user6@monash.com",
+    "password": "User@106",
+    "role": "user"
+  },
+  {
+    "username": "user7@monash.com",
+    "password": "User@107",
+    "role": "user"
+  },
+  {
+    "username": "user8@monash.com",
+    "password": "User@108",
+    "role": "user"
+  },
+  {
+    "username": "user9@monash.com",
+    "password": "User@109",
+    "role": "user"
+  },
+  {
+    "username": "user10@monash.com",
+    "password": "User@110",
+    "role": "user"
+  },
+  {
+    "username": "user11@monash.com",
+    "password": "User@111",
+    "role": "user"
+  },
+  {
+    "username": "user12@monash.com",
+    "password": "User@112",
+    "role": "user"
+  },
+  {
+    "username": "user13@monash.com",
+    "password": "User@113",
+    "role": "user"
+  },
+  {
+    "username": "user14@monash.com",
+    "password": "User@114",
+    "role": "user"
+  },
+  {
+    "username": "user15@monash.com",
+    "password": "User@115",
+    "role": "user"
+  },
+  {
+    "username": "user16@monash.com",
+    "password": "User@116",
+    "role": "user"
+  },
+  {
+    "username": "user17@monash.com",
+    "password": "User@117",
     "role": "user"
   }
 ]

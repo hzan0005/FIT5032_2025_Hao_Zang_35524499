@@ -38,6 +38,31 @@
         </div>
       </section>
 
+      <section class="row g-4 mb-5">
+        <div class="col-lg-8">
+            <div class="chart-card p-4 h-100">
+                <h2 class="fw-bold mb-3">Average Section Ratings</h2>
+                <div style="height: 350px">
+                  <Bar v-if="ratingsChartData.labels.length > 0" :data="ratingsChartData" :options="barChartOptions" />
+                  <div v-else class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                      Loading chart data...
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+             <div class="chart-card p-4 h-100">
+                <h2 class="fw-bold mb-3">User Types</h2>
+                 <div style="height: 350px">
+                    <Doughnut v-if="userTypesChartData.labels.length > 0" :data="userTypesChartData" :options="doughnutChartOptions" />
+                     <div v-else class="text-center text-muted d-flex align-items-center justify-content-center h-100">
+                        Loading user data...
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+
       <section class="user-management-card p-4">
         <h2 class="fw-bold mb-4">User Management</h2>
         
@@ -112,49 +137,78 @@
 import { ref, onMounted, computed } from 'vue';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 
+// --- 图表库导入 ---
+import { Bar, Doughnut } from 'vue-chartjs';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement } from 'chart.js';
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement);
+
 const currentUser = ref(null);
 const users = ref([]);
 const newUser = ref({ email: '', password: '', role: 'user' });
 const loadingUsers = ref(true);
 const totalRatings = ref(0);
 
-// --- 数据计算属性 ---
+// --- 图表数据 ---
+const ratingsChartData = ref({ labels: [], datasets: [] });
+const barChartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: { y: { beginAtZero: true, max: 5, ticks: { stepSize: 1 } } },
+  plugins: { legend: { display: false } },
+  barPercentage: 0.5,
+  categoryPercentage: 0.8
+};
+const userTypesChartData = ref({ labels: ['Users', 'Admins'], datasets: [] });
+const doughnutChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false
+};
+
+// --- 计算属性 ---
 const totalUsers = computed(() => users.value.length);
 const adminCount = computed(() => users.value.filter(u => u.role === 'admin').length);
 
 // --- 生命周期钩子 ---
 onMounted(() => {
-  const userData = localStorage.getItem('currentUser');
-  currentUser.value = userData ? JSON.parse(userData) : null;
-  
-  // 在真实应用中，这里会调用云函数
+  const auth = getAuth();
+  currentUser.value = auth.currentUser;
   fetchUsersFromBackend();
-  fetchTotalRatings();
+  fetchRatingsData();
 });
+
+// --- ★ 新增 ★: 生成随机日期的辅助函数 ---
+function getRandomRecentDate() {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(end.getDate() - 30); // 设置一个30天的时间范围
+    const randomDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+    
+    const year = randomDate.getFullYear();
+    const month = (randomDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = randomDate.getDate().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+}
+
 
 // --- 方法 ---
 
-// 模拟: 从后端(云函数)获取用户列表
 async function fetchUsersFromBackend() {
   loadingUsers.value = true;
-  console.warn("Security Warning: In a real app, user list should be fetched from a secure backend (e.g., Firebase Cloud Function), not a public JSON file.");
-  
-  // **未来替换**: 此处应替换为对 Firebase Cloud Function 的 https 调用
-  // const response = await fetch('YOUR_CLOUD_FUNCTION_URL/listUsers');
-  // const data = await response.json();
-  
-  // **当前模拟**: 继续使用 users.json 作为模拟数据源
   try {
     const res = await fetch('/data/users.json');
     const data = await res.json();
     
-    // 模拟真实 Firebase Auth 返回的数据结构
+    // ★ 修改 ★: 使用辅助函数生成随机日期
     users.value = data.map(u => ({
-        uid: `mock-uid-${Math.random()}`, // 模拟 UID
-        email: u.username, // 字段名映射
+        uid: `mock-uid-${Math.random()}`,
+        email: u.username,
         role: u.role,
-        lastSignInTime: '2025-08-14' // 模拟数据
+        lastSignInTime: getRandomRecentDate() // <-- 调用函数
     }));
+    
+    updateUserTypesChart();
 
   } catch (err) {
     console.error('Failed to load user data:', err);
@@ -163,76 +217,83 @@ async function fetchUsersFromBackend() {
   }
 }
 
-// 获取总评分数
-async function fetchTotalRatings() {
+async function fetchRatingsData() {
     try {
         const response = await fetch('/data/ratings.json');
         const data = await response.json();
-        let count = 0;
+        const labels = [];
+        const averages = [];
+        let totalCount = 0;
         for (const section in data) {
-            count += data[section].length;
+            labels.push(section);
+            const ratings = data[section];
+            totalCount += ratings.length;
+            const average = ratings.length > 0 ? ratings.reduce((sum, r) => sum + r.rating, 0) / ratings.length : 0;
+            averages.push(average.toFixed(2));
         }
-        totalRatings.value = count;
+        totalRatings.value = totalCount;
+        ratingsChartData.value = {
+            labels: labels,
+            datasets: [{
+                label: 'Average Rating',
+                backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#dc3545'],
+                borderRadius: 5,
+                data: averages
+            }]
+        };
     } catch(err) {
-        console.error("Could not fetch ratings count", err)
+        console.error("Could not fetch ratings data", err)
     }
 }
 
-// 添加用户
+function updateUserTypesChart() {
+    const normalUsers = totalUsers.value - adminCount.value;
+    userTypesChartData.value = {
+        labels: ['Regular Users', 'Admins'],
+        datasets: [{
+            backgroundColor: ['#0d6efd', '#198754'],
+            data: [normalUsers, adminCount.value]
+        }]
+    };
+}
+
 async function addUser() {
-  alert("重要提示：\n\n此功能使用了Firebase客户端SDK的`createUserWithEmailAndPassword`。\n\n在真实应用中，创建用户应通过安全的后端（云函数）完成，以避免安全风险并正确分配角色。\n\n使用客户端创建后，新用户会自动登录，这可能会中断您当前的管理员会话。");
-  
+  alert("NOTE: This uses the client-side Firebase SDK for demonstration. In a real app, this should be a secure backend function. Creating a user here will sign you out of your admin account.");
   const auth = getAuth();
   try {
-    // **注意**: 这将在客户端创建用户，并自动登录该新用户
     const userCredential = await createUserWithEmailAndPassword(auth, newUser.value.email, newUser.value.password);
-    
-    // **未来**: 调用云函数来设置自定义角色 (custom claims)
-    // await fetch('YOUR_CLOUD_FUNCTION_URL/setUserRole', { method: 'POST', body: JSON.stringify({ uid: userCredential.user.uid, role: newUser.value.role }) });
-
-    alert(`用户 ${userCredential.user.email} 已创建成功。请注意，您可能需要重新登录管理员账户。`);
-    
-    // 刷新用户列表 (在真实应用中会重新调用 fetchUsersFromBackend)
+    alert(`User ${userCredential.user.email} created. You may need to log back in as admin.`);
     users.value.push({
         uid: userCredential.user.uid,
         email: userCredential.user.email,
-        role: newUser.value.role, // 模拟角色设置
+        role: newUser.value.role,
         lastSignInTime: new Date().toLocaleDateString()
     });
-
+    updateUserTypesChart();
     newUser.value = { email: '', password: '', role: 'user' };
-
   } catch (error) {
     console.error("Error creating user:", error);
-    alert(`创建用户失败: ${error.message}`);
+    alert(`Failed to create user: ${error.message}`);
   }
 }
 
-// 修改角色 (模拟)
 function changeRole(user) {
   const newRole = user.role === 'admin' ? 'user' : 'admin';
   if (confirm(`Are you sure you want to change ${user.email}'s role to "${newRole}"?`)) {
-    // **未来**: 此处应调用云函数来修改用户的自定义角色
-    // await fetch('YOUR_CLOUD_FUNCTION_URL/setUserRole', { method: 'POST', body: JSON.stringify({ uid: user.uid, role: newRole }) });
-    
-    // **当前模拟**: 直接修改前端数据
     const userIndex = users.value.findIndex(u => u.uid === user.uid);
     if (userIndex !== -1) {
       users.value[userIndex].role = newRole;
+      updateUserTypesChart();
     }
-    alert(`${user.email}'s role has been changed to "${newRole}". (This is a frontend simulation)`);
+    alert(`${user.email}'s role has been changed to "${newRole}". (Frontend simulation)`);
   }
 }
 
-// 删除用户 (模拟)
 function deleteUser(user) {
    if (confirm(`Are you sure you want to delete the user ${user.email}? This action cannot be undone.`)) {
-    // **未来**: 此处应调用云函数来从 Firebase Auth 中删除用户
-    // await fetch('YOUR_CLOUD_FUNCTION_URL/deleteUser', { method: 'POST', body: JSON.stringify({ uid: user.uid }) });
-
-    // **当前模拟**: 直接从前端列表中移除
     users.value = users.value.filter(u => u.uid !== user.uid);
-    alert(`User ${user.email} has been deleted. (This is a frontend simulation)`);
+    updateUserTypesChart();
+    alert(`User ${user.email} has been deleted. (Frontend simulation)`);
    }
 }
 </script>
@@ -241,24 +302,15 @@ function deleteUser(user) {
 .admin-view-container {
   background-color: #f0f2f5;
 }
-
-.stat-card {
+.stat-card, .chart-card, .user-management-card {
   background-color: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
-
 .stat-icon {
   width: 60px;
   height: 60px;
 }
-
-.user-management-card {
-  background-color: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
 .table {
   font-size: 0.95rem;
 }

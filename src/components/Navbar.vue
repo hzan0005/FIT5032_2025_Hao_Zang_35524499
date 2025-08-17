@@ -35,36 +35,37 @@
       </button>
 
       <div
-        :class="['collapse', 'navbar-collapse', 'order-xl-1', { show: !isAdmin }]"
+        :class="['collapse', 'navbar-collapse', 'order-xl-1']"
         id="navbarSupportedContent"
       >
         <ul class="navbar-nav me-auto mb-2 mb-xl-0">
           <li class="nav-item">
-            <router-link class="nav-link" to="/">Home</router-link>
+            <router-link class="nav-link" to="/" active-class="active">Home</router-link>
           </li>
 
           <template v-if="!isAdmin">
-            <li class="nav-item"><router-link class="nav-link" to="/about">About Us</router-link></li>
-            <li class="nav-item"><router-link class="nav-link" to="/health">Health Information</router-link></li>
-            <li class="nav-item"><router-link class="nav-link" to="/community">Community Programs</router-link></li>
-            <li class="nav-item"><router-link class="nav-link" to="/skills">Skills Development</router-link></li>
-            <li class="nav-item"><router-link class="nav-link" to="/caregiver">Caregiver Support</router-link></li>
-            <li class="nav-item"><router-link class="nav-link" to="/map">Map Navigator</router-link></li>
-            <li class="nav-item"><router-link class="nav-link" to="/help">Help Center</router-link></li>
-            <li class="nav-item"><router-link class="nav-link" to="/donate">Donate Us</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/about" active-class="active">About Us</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/health" active-class="active">Health Information</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/community" active-class="active">Community Programs</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/skills" active-class="active">Skills Development</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/caregiver" active-class="active">Caregiver Support</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/map" active-class="active">Map Navigator</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/booking" active-class="active">Booking Calendar</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/help" active-class="active">Help Center</router-link></li>
+            <li class="nav-item"><router-link class="nav-link" to="/donate" active-class="active">Donate Us</router-link></li>
           </template>
 
           <li class="nav-item" v-if="currentUser.role === 'admin'">
-            <router-link class="nav-link" to="/admin">Admin Dashboard</router-link>
+            <router-link class="nav-link" to="/admin" active-class="active">Admin Dashboard</router-link>
           </li>
            <li class="nav-item" v-if="currentUser.role === 'admin'">
-            <router-link class="nav-link" to="/admin/data">Interactive Data</router-link>
+            <router-link class="nav-link" to="/admin/data" active-class="active">Interactive Data</router-link>
           </li>
           <li class="nav-item" v-if="currentUser.role === 'admin'">
-            <router-link class="nav-link" to="/rating">Rating Dashboard</router-link>
+            <router-link class="nav-link" to="/rating" active-class="active">Rating View</router-link>
           </li>
           <li class="nav-item" v-if="currentUser.role === 'admin'">
-            <router-link class="nav-link" to="/sendemail">Send Email</router-link>
+            <router-link class="nav-link" to="/sendemail" active-class="active">Send Email</router-link>
           </li>
         </ul>
       </div>
@@ -122,3 +123,30 @@ const handleLogout = () => {
   router.push('/login')
 }
 </script>
+
+<style scoped>
+.nav-link {
+  white-space: nowrap;
+  font-weight: 500;
+  color: #333 !important;
+  transition: all 0.2s ease-in-out;
+}
+.nav-link:hover {
+  color: #0d6efd !important;
+}
+
+/* ★ FIX: Target Bootstrap's .active class directly */
+.nav-link.active {
+  font-weight: 700;
+  color: #0d6efd !important;
+}
+
+.btn-sm {
+  border-radius: 20px;
+  padding: 4px 12px;
+  transition: all 0.2s ease-in-out;
+}
+.btn-sm:hover {
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+}
+</style>
